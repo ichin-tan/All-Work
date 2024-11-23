@@ -1,0 +1,62 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  h1 {
+    color: #333;
+  }
+  
+  #game-interface {
+    margin: 50px auto;
+    width: 400px;
+  }
+  
+  #scoreboard {
+    margin-bottom: 20px;
+  }
+  
+  #dice-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .dice {
+    width: 100px;
+    height: 100px;
+    background-color: #999;
+    border-radius: 5px;
+  }
+  #roll-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #roll-button:hover {
+    background-color: #45a049;
+  }
+  
+  .dice {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    color: white;
+  }
+  
+  .dice:nth-child(1) {
+    background-color: #009688;
+  }
+  
+  .dice:nth-child(2) {
+    background-color: #f44336;
+  }
+  
+  .dice:nth-child(3) {
+    background-color: #3f51b5;
+  }

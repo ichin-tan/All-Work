@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Event Capture and DOM Manipulation</title>
+
+  <style>
+
+    body {
+
+      font-family: Arial, sans-serif;
+
+      padding: 20px;
+
+      background-color: #f4f4f4;
+
+    }
+
+    h1, p {
+
+      color: darkblue;
+
+    }
+
+    p {
+
+      margin: 10px 0;
+
+      padding: 10px;
+
+      background-color: #fff;
+
+      border: 1px solid #ccc;
+
+    }
+
+    button {
+
+      margin: 10px 0;
+
+      padding: 10px 20px;
+
+      font-size: 1rem;
+
+      background-color: darkblue;
+
+      color: white;
+
+      cursor: pointer;
+
+    }
+
+    button:hover {
+
+      background-color: #4CAF50;
+
+    }
+
+    .log {
+
+      margin-top: 20px;
+
+      padding: 10px;
+
+      background-color: #fff5c3;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+
+
+  <h1 id="main-heading">Event Capture and DOM Manipulation</h1>
+
+
+
+  <!-- Paragraphs to manipulate -->
+
+  <p class="content">Click the buttons below to interact with this page!</p>
+
+  <p class="content">Observe how we handle events and manipulate the DOM.</p>
+
+
+
+  <!-- Buttons to capture events and manipulate the DOM -->
+
+  <button id="captureEventBtn">Capture Click Event</button>
+
+  <button id="replayEventsBtn">Replay Stored Events</button>
+
+
+
+  <!-- Logs to display captured events -->
+
+  <div id="eventLog" class="log">Event Log:</div>
+
+
+
+  <script>
+
+    // Global array to store captured events
+
+    let capturedEvents = [];
+
+
+
+    // Select HTML elements
+
+    const heading = document.querySelector('#main-heading');
+
+    const paragraphs = document.querySelectorAll('.content');
+
+    const captureEventBtn = document.querySelector('#captureEventBtn');
+
+    const replayEventsBtn = document.querySelector('#replayEventsBtn');
+
+    const eventLog = document.querySelector('#eventLog');
+
+
+
+    // Function to log and display the captured event
+
+    function logEvent(event) {
+
+      const eventData = {
+
+        type: event.type,
+
+        timestamp: event.timeStamp,
+
+        x: event.clientX || null,
+
+        y: event.clientY || null,
+
+        key: event.key || null
+
+      };
+
+      
+
+      // Store the event data in the array
+
+      capturedEvents.push(eventData);
+
+
+
+      // Update the event log in the DOM
+
+      let logMessage = `Event Captured: ${eventData.type}, Timestamp: ${eventData.timestamp}`;
+
+      if (eventData.type === 'click') {
+
+        logMessage += `, Coordinates: (${eventData.x}, ${eventData.y})`;
+
+      }
+
+      eventLog.innerHTML += `<p>${logMessage}</p>`;
+
+    }
+
+
+
+    // Function to replay stored events
+
+    function replayEvents() {
+
+      if (capturedEvents.length === 0) {
+
+        eventLog.innerHTML += '<p>No events to replay.</p>';
+
+        return;
+
+      }
+
+
+
+      eventLog.innerHTML += '<p><strong>Replaying Events:</strong></p>';
+
+
+
+      // Replay the events one by one
+
+      capturedEvents.forEach((eventData, index) => {
+
+        setTimeout(() => {
+
+          if (eventData.type === 'click') {
+
+            // Simulate a click event by changing DOM content based on coordinates
+
+            heading.textContent = `Simulated Click Event at (${eventData.x}, ${eventData.y})`;
+
+          }
+
+          eventLog.innerHTML += `<p>Replayed: ${eventData.type} at ${eventData.timestamp}</p>`;
+
+        }, 500 * (index + 1));  // Delay to simulate event sequence
+
+      });
+
+    }
+
+
+
+    // Add event listener to capture click event
+
+    captureEventBtn.addEventListener('click', (event) => {
+
+      logEvent(event);  // Log the event and store it
+
+    });
+
+
+
+    // Add event listener to replay the captured events
+
+    replayEventsBtn.addEventListener('click', () => {
+
+      replayEvents();  // Replay the captured events
+
+    });
+
+
+
+    // Add event listener to capture keypress events globally
+
+    document.addEventListener('keypress', (event) => {
+
+      logEvent(event);  // Log the keypress event and store it
+
+    });
+
+  </script>
+
+
+
+</body>
+
+</html>

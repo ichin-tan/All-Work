@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students</title>
+    <style>
+        .deans {
+            background-color:yellow;
+            text-align: center;
+            padding: 5px;
+        }
+        .not-deans {
+            background-color:rgb(255, 255, 255);
+            text-align: center;
+            padding: 5px;
+        }
+        .outer-box {
+            border: none;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+
+        .box {
+            background-color: aquamarine;
+            border:1px solid #ccc;
+            text-align: center;
+            width:200px;
+            padding:20px;
+        }
+    </style>
+</head>
+<body>
+    <p>This is the list of students</p>
+
+    <div class="outer-box">
+        <% for (let i = 0; i < arrStudents.length;i++) { %>
+            <div class="box">
+                <p>Name: <%= arrStudents[i].name %></p>
+                <p>GPA: <%= arrStudents[i].score %></p>
+               
+                <% if (arrStudents[i].score >= 3.4) { %>
+                    <p class="deans">Congratulations, you are on the Dean's Honors List</p>
+                    <% } else { %>
+                    <p class="not-deans">Please study more next semester!</p>
+                <%  } %>
+            </div>
+        <% } %>    
+    </div>
+ 
+</body>
+</html>

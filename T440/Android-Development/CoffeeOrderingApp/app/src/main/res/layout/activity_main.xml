@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order a Coffee!"
+        android:textSize="20sp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/btnDecrease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"/>
+
+
+        <EditText
+            android:id="@+id/etQuantity"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"/>
+
+
+        <Button
+            android:id="@+id/btnIncrease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+"/>
+
+
+    </LinearLayout>
+
+
+
+
+    <RadioGroup
+        android:id="@+id/rgMilkSelector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+
+        <RadioButton
+            android:id="@+id/rbNone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No Milk (+0.00)" />
+
+
+        <RadioButton
+            android:id="@+id/rbSoy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Soy (+1.50)" />
+
+
+        <RadioButton
+            android:id="@+id/rbAlmondMilk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Almond Milk (+2.00)" />
+    </RadioGroup>
+
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Order"/>
+
+
+    <Button
+        android:id="@+id/btnShowHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Order History"/>
+
+</LinearLayout>
+

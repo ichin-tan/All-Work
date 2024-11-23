@@ -1,0 +1,82 @@
+/* Base styling for body and layout structure */
+
+body {
+
+    margin: 0;
+
+    font-family: Arial, sans-serif;
+
+    display: flex;
+
+    flex-direction: column; /* Stack sections vertically by default */
+
+    min-height: 100vh; /* Full height of the viewport */
+
+}
+
+
+
+/* Header, Navigation, Footer styles */
+
+.main-header, .main-nav, .main-footer {
+
+    text-align: center;
+
+    padding: 1rem;
+
+    background-color: #333;
+
+    color: white;
+
+}
+
+
+
+/* Main content and sidebar */
+
+.main-content, .sidebar {
+
+    padding: 1rem;
+
+}
+
+
+
+/* Flexbox: allow main content to grow and take up space */
+
+.main-content {
+
+    flex: 1;
+
+    background-color: #f4f4f4; /* Light background for content */
+
+}
+
+
+
+.sidebar {
+
+    background-color: #eaeaea; /* Slightly different color for sidebar */
+
+    padding: 1rem;
+
+}
+
+
+
+/* Footer styling */
+
+.main-footer {
+
+    background-color: #444; /* Darker footer background */
+
+    color: white;
+
+    padding: 1rem;
+
+    text-align: center;
+
+}
+
+
+

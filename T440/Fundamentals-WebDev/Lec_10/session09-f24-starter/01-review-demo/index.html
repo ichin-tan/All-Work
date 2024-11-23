@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Document</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <!-- for simplicity, using an internal stylesheet   -->
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;} 
+        
+        table {
+            width: 200px; text-align: center; border-collapse: collapse; border: 3px solid blue;
+        }
+
+        td,th {
+            border: 3px solid blue
+        }
+
+        #price-boxes {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+
+        .box {
+            padding: 10px;
+            border: 2px solid blue;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Example 1: Prices Array</h1>
+    <button id="btn-prices">Show Prices</button>
+    <p>Results of price increases go below</p>
+    
+    
+    <ul id="price-list"></ul>
+
+    <table id="price-table"></table>
+
+    <div id="price-boxes"></div>
+
+
+
+
+    <h1>Example 2: Employees</h1>
+    <button id="btn-employees">Show Employees</button>
+
+    <p>List of employees goes below</p>
+    <ul id="employee-list"></ul>
+
+    <script type="text/javascript" src="app.js"></script>
+</body>
+</html>

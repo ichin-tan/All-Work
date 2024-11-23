@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        img {
+            height: 150px;
+            width: 150px;
+        }
+
+        .pokemon-box {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            border: 2px solid darkblue;
+            padding: 10px;
+        }
+
+        .outer-box {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>This is example of ejs example</h1>
+    <% for(let i=0; i<3; i++) { %>
+        <p>Hello</p>
+    <% } %>
+
+    <div class="outer-box">
+        <% for(i=0; i<7; i++) { %>
+            <div class="pokemon-box">
+                <% if (i < 3) { %>
+                    <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/012.png"/>
+                <% } else { %>
+                    <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/025.png"/>
+                <% } %>
+                <p>Hello, I am Butterfree</p>
+                <a href="#">Click here to learn more</a>    
+            </div>
+        <% } %>    
+    </div>
+
+    <% for(i = 14; i<40; i++) { %>
+        <p>Hello <span> <%= i %> </span> How are you?</p>
+        <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/0<%= i %>.png"/>
+    <% } %>
+
+    <p>My name - <%= name %></p>
+    <p>My name - <%= favColor %></p>
+    <!-- <p>Has pet? - <%= hasPet %></p> -->
+
+    <% if((favColor === "Green" || favColor === "green")) { %>
+        <p>You are winner because green is best!</p>
+    <% } else { %>
+        <p>Looser! Green is the best Ha Ha Ha!</p>
+    <% } %>
+
+    <% if (hasPet === true) { %>
+        <p>Here is a photo of your pet</p>
+        <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/099.png"/>
+    <% } else { %>
+        <p>You do not have a pet</p>
+    <%}%>
+ 
+</body>
+</html>

@@ -1,0 +1,14 @@
+body {
+    width: 500px;
+}
+
+img {
+    height: 50px;
+    width: 50px;
+}
+
+.dice-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

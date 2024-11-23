@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Balloon Popping Game</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      height: 100vh;
+      background-color: lightblue;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .balloon {
+      width: 50px;
+      height: 80px;
+      position: absolute;
+      border-radius: 50% 50% 50% 50%;
+      cursor: pointer;
+      border: 2px solid #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      font-size: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    #gameOverMessage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      color: darkblue;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="gameOverMessage">You popped all the balloons! <br> Your time: <span id="timeTaken"></span> seconds</div>
+
+  <!-- Balloons -->
+  <div id="balloon1" class="balloon" style="background-color: red;"></div>
+  <!-- <div id="balloon2" class="balloon" style="background-color: yellow;"></div>
+  <div id="balloon3" class="balloon" style="background-color: green;"></div>
+  <div id="balloon4" class="balloon" style="background-color: blue;"></div>
+  <div id="balloon5" class="balloon" style="background-color: purple;"></div>
+  <div id="balloon6" class="balloon" style="background-color: orange;"></div> -->
+
+  <script>
+    // Select all balloons
+    const balloons = document.querySelectorAll('.balloon');
+    let poppedBalloons = 0; // Track number of popped balloons
+    let startTime; // Track start time of the game
+    let speedMultiplier = 1; // Speed multiplier for balloon movement
+
+    // Initialize balloon positions and movement
+    function startGame() {
+      startTime = Date.now(); // Record the start time of the game
+
+      balloons.forEach(balloon => {
+        // Set initial random positions for the balloons
+        balloon.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+        balloon.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+
+        // Move each balloon continuously
+        moveBalloon(balloon);
+
+        // Add click event to pop the balloon
+        balloon.addEventListener('click', popBalloon);
+      });
+    }
+
+    // Function to move balloons
+    function moveBalloon(balloon) {
+      let deltaX = Math.random() * 2 - 1; // Horizontal movement (-1 to 1)
+      let deltaY = Math.random() * 2 - 1; // Vertical movement (-1 to 1)
+
+      function animateBalloon() {
+        // Get current position
+        let currentX = parseFloat(balloon.style.left);
+        let currentY = parseFloat(balloon.style.top);
+
+        // Update position
+        currentX += deltaX * speedMultiplier;
+        currentY += deltaY * speedMultiplier;
+
+        // Keep balloons within bounds of the window
+        if (currentX <= 0 || currentX >= window.innerWidth - 50) {
+          deltaX *= -1; // Reverse direction on horizontal bounds
+        }
+        if (currentY <= 0 || currentY >= window.innerHeight - 100) {
+          deltaY *= -1; // Reverse direction on vertical bounds
+        }
+
+        balloon.style.left = currentX + 'px';
+        balloon.style.top = currentY + 'px';
+
+        // Continue animating if balloon is not popped
+        if (balloon.style.display !== 'none') {
+          requestAnimationFrame(animateBalloon);
+        }
+      }
+
+      animateBalloon(); // Start the animation loop
+    }
+
+    // Function to pop a balloon
+    function popBalloon(event) {
+      const balloon = event.target;
+      balloon.style.display = 'none'; // Hide balloon
+      poppedBalloons++; // Increment popped balloons count
+
+      // Speed up remaining balloons
+      speedMultiplier += 0.5;
+
+      // Check if all balloons are popped
+      if (poppedBalloons === balloons.length) {
+        endGame();
+      }
+    }
+
+    // Function to end the game
+    function endGame() {
+      const endTime = Date.now();
+      const timeTaken = ((endTime - startTime) / 1000).toFixed(2); // Calculate time taken in seconds
+
+      // Show game over message
+      const gameOverMessage = document.getElementById('gameOverMessage');
+      const timeTakenElement = document.getElementById('timeTaken');
+      timeTakenElement.textContent = timeTaken;
+      gameOverMessage.style.display = 'block';
+    }
+
+    // Start the game on page load
+    window.onload = startGame;
+
+  </script>
+
+</body>
+</html>

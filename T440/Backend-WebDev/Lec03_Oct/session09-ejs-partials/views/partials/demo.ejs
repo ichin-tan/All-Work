@@ -1,0 +1,16 @@
+<!-- <h1>Demo</h1>
+<p>This is the Buziel pokemon!</p> -->
+
+<% if (pokeId < 10) { %>
+    <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/00<%= pokeId %>.png" style="width:150px; border:1px solid #ccc;"/>
+<% } %>
+
+<% if (pokeId >= 10 && pokeId <= 99) { %>
+    <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/0<%= pokeId %>.png" style="width:150px; border:1px solid #ccc;"/>
+<% } %>
+
+<% if (pokeId >= 100) { %>
+    <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/<%= pokeId %>.png" style="width:150px; border:1px solid #ccc;"/>
+<% } %>
+
+<!-- <p>It has pokemon id <%= pokeId %>!</p> -->

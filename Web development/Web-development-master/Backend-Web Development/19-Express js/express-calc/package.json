@@ -1,0 +1,16 @@
+{
+  "name": "express-calc",
+  "version": "1.0.0",
+  "description": "A calc web app using server",
+  "main": "calc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chintan Panchal",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.21"
+  }
+}

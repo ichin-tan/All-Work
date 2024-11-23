@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox Images</title>
+    <style>
+        /* Styling for the flex container */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Image container styling */
+        nav div {
+            flex: 1; /* Allow the div to grow equally */
+            padding: 0 10px; /* Adds some spacing between images */
+        }
+
+        /* Image styling */
+        nav img {
+            height: 150px; /* Set a consistent height */
+            width: auto;   /* Let the width auto-adjust to maintain aspect ratio */
+            object-fit: cover; /* Ensure images fill the container without distortion */
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div><img src="https://imageio.forbes.com/specials-images/imageserve/6064c6802c761b99a89d1f21/0x0.jpg?format=jpg&crop=2375,1336,x0,y120,safe&height=600&width=1200&fit=bounds" alt="Bamf"></div>
+        <div><img src="https://imageio.forbes.com/specials-images/imageserve/6064c6802c761b99a89d1f21/0x0.jpg?format=jpg&crop=2375,1336,x0,y120,safe&height=600&width=1200&fit=bounds" alt="Iceland"></div>
+        <div><img src="https://imageio.forbes.com/specials-images/imageserve/6064c6802c761b99a89d1f21/0x0.jpg?format=jpg&crop=2375,1336,x0,y120,safe&height=600&width=1200&fit=bounds" alt="Maroon Bells"></div>
+    </nav>
+</body>
+</html>

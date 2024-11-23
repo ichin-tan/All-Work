@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" /> 
+    <!-- for simplicity, using an internal stylesheet     -->
+    <style>        
+        body {font-family: Arial, Helvetica, sans-serif;}
+        input {            
+            padding:8px 10px;
+        }
+        button {
+            padding:8px 10px;
+            margin-bottom:10px;
+        }        
+        #container {
+            display:flex;
+            flex-direction:"row";
+            gap:50px;
+        }
+        #col1 {
+            border:1px solid #ccc;
+            padding:20px;
+            width:300px;
+        }
+        #col2 {
+            border:1px solid #ccc;   
+            padding:20px; 
+        }
+        #form {
+            display:flex; 
+            flex-direction: column; 
+            width:300px; 
+            gap:10px;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Students App</h1>
+
+    <div id="container">
+        <div id="col1">
+            <div>
+                <p>Show Students</p>
+                <button id="btn-show-all">Show All Students</button>
+            </div>
+
+            <div id="form">
+                <p>Add a Student</p>
+                <input type="text" placeholder="Enter student name" id="tb-name1"/>
+                <input type="text" placeholder="Enter test score" id="tb-test-score"/>
+                <button id="btn-add">Add Student</button>
+                <button id="btn-increase-grades">Increase Grades by 15%</button>
+            </div>
+
+            <div>
+                <p>Count the students:</p>
+                <input type="text" placeholder="Enter student name" id="tb-name2"/>
+                <button id="btn-count">Count Students</button>
+            </div>
+
+            <div>
+                <p>Passing and Failing Students</p>
+                <button id="btn-pass-fail">Show Pass and Fail</button>
+            </div>
+        </div>
+
+        <div id="col2">
+            <!-- output goes here -->
+            <p id="messages">Messages go here</p>
+            <p id="count-message"></p>
+
+            <p>List goes here:</p>
+            <ul id="student-list">                
+            </ul>
+        </div>
+    </div>
+
+ 
+
+
+    <script type="text/javascript" src="students.js"></script>
+
+</body>
+</html>

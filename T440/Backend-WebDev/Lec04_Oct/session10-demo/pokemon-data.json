@@ -1,0 +1,81 @@
+[
+    {
+      "pokedex_id": 25,
+      "name": "Pikachu",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/025.png",
+      "type": "electric"
+    },
+    {
+      "pokedex_id": 63,
+      "name": "Abra",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/063.png",
+      "type": "psychic"
+    },
+    {
+      "pokedex_id": 94,
+      "name": "Gengar",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/094.png",
+      "type": "ghost"
+    },
+    {
+      "pokedex_id": 125,
+      "name": "Electabuzz",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/125.png",
+      "type": "electric"
+    },
+    {
+      "pokedex_id": 73,
+      "name": "Tentacruel",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/073.png",
+      "type": "water"
+    },
+    {
+      "pokedex_id": 31,
+      "name": "Nidoqueen",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/031.png",
+      "type": "ground"
+    },
+    {
+      "pokedex_id": 78,
+      "name": "Rapidash",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/078.png",
+      "type": "fire"
+    },
+    {
+      "pokedex_id": 124,
+      "name": "Jynx",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/134.png",
+      "type": "psychic"
+    },
+    {
+      "pokedex_id": 56,
+      "name": "Mankey",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/56.png",
+      "type": "fighting"
+    },
+    {
+      "pokedex_id": 112,
+      "name": "Rhydon",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/112.png",
+      "type": "rock"
+    },
+    {
+      "pokedex_id": 74,
+      "name": "Geodude",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/074.png",
+      "type": "rock"
+    },
+    {
+      "pokedex_id": 140,
+      "name": "Kabuto",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/140.png",
+      "type": "rock"
+    },
+    {
+      "pokedex_id": 58,
+      "name": "Growlithe",
+      "image": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/058.png",
+      "type": "fire"
+    }
+  ]
+  

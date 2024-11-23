@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>All Students</title>
+    <style>
+        .student-box {
+            border: 5px solid blue;
+            padding-left: 20px;
+        }
+        .main-box {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <p>Number of students is <%= students.length %></p>
+
+    <div class="main-box">
+        <% for(i=0; i<students.length; i++) { %>
+            <div class="student-box">
+                <p>Name: <%= students[i].name  %></p>    
+                <p>GPA: <%= students[i].gpa  %></p>
+        
+                <% if (students[i].tuitionPaid === true) { %>
+                    <p>Tution is paid</p>
+                <% } else { %>
+                    <p>Tution is not paid</p>
+                <% } %>    
+            </div>
+        <% } %>    
+    </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>  
+    <header>
+        <h1>Dice Rolling Game</h1>
+        <p>Instructions</p>
+        <ul>
+            <li>Enter a value between 1 and 6</li>
+            <li>Computer will randomly select a value between 1 and 6</li>
+            <li>Whoever has the higher number wins!</li>
+        </ul>
+    </header>
+    <main>        
+        <p>Enter a value between 1 and 6</p>
+        <input type="text" placeholder="Enter a value between 1-6"/>
+        <button>Play Now</button>
+        <!-- TODO:  Add placeholder html for the game output -->
+    </main>   
+    <p id="result-p">The winner is: </p>
+
+    <div class="result-container">
+        <div class="dice-container">
+            <p id="player-value">Player value: </p>
+            <img src="assets/dice01.png" alt="">    
+        </div>
+        <div class="dice-container">
+            <p id="computer-value">Player value: </p>    
+            <img src="assets/dice01.png" alt="">    
+        </div>
+    </div>
+
+    <ul id="history">
+
+    </ul>
+    <script type="text/javascript" src="app.js"></script>
+</body>
+</html>

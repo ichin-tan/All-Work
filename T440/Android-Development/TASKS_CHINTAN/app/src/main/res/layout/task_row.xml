@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    >
+
+    <TextView
+        android:id="@+id/tvTaskName"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"/>
+
+    <ImageView
+        android:id="@+id/imgPriority"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="10dp"/>
+
+    <ImageView
+        android:id="@+id/imgDelete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="10dp"/>
+
+    <ImageView
+        android:id="@+id/imgUpdate"
+        android:layout_width="30dp"
+        android:layout_height="30dp"/>
+
+</LinearLayout>

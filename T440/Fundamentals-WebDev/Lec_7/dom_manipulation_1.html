@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>DOM Manipulation Lab</title>
+
+  <style>
+
+    body {
+
+      font-family: Arial, sans-serif;
+
+      padding: 20px;
+
+      background-color: #f0f0f0;
+
+    }
+
+    h1 {
+
+      color: darkblue;
+
+      font-size: 2.5rem;
+
+      text-align: center;
+
+      margin-bottom: 20px;
+
+    }
+
+    p {
+
+      font-size: 1.2rem;
+
+      margin: 10px 0;
+
+      padding: 10px;
+
+      background-color: #fff;
+
+      border: 1px solid #ddd;
+
+    }
+
+    button {
+
+      padding: 10px 20px;
+
+      font-size: 1rem;
+
+      margin: 20px 0;
+
+      cursor: pointer;
+
+      border: none;
+
+      background-color: darkblue;
+
+      color: white;
+
+    }
+
+    button:hover {
+
+      background-color: #4CAF50;
+
+    }
+
+    .info {
+
+      background-color: lightyellow;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+
+
+  <h1 id="main-heading">Welcome to DOM Manipulation!</h1>
+
+
+
+  <!-- Paragraphs to manipulate -->
+
+  <p class="content">This is the first paragraph. You can change its color!</p>
+
+  <p class="content">This is the second paragraph. Try selecting it with JavaScript!</p>
+
+
+
+  <!-- Button to change background color -->
+
+  <button id="changeColorBtn">Change Background Color</button>
+
+
+
+  <!-- Real-time window information -->
+
+  <p id="windowInfo" class="info">Window size: <span id="windowSize"></span></p>
+
+
+
+  <script>
+
+    // 1. Selecting Elements
+
+
+
+    // Select the heading using querySelector
+
+    const heading = document.querySelector('#main-heading');
+
+    
+
+    // Select the paragraphs using querySelectorAll
+
+    const paragraphs = document.querySelectorAll('.content');
+
+
+
+    // Select the button
+
+    const changeColorBtn = document.querySelector('#changeColorBtn');
+
+    
+
+    // Select the window info element
+
+    const windowInfo = document.querySelector('#windowInfo');
+
+    const windowSizeDisplay = document.querySelector('#windowSize');
+
+    
+
+    // 2. Manipulating the Elements
+
+
+
+    // Change the heading text content
+
+    heading.textContent = 'Learn Real-Time DOM Manipulation!';
+
+
+
+    // Change the text and background color of each paragraph
+
+    paragraphs.forEach((paragraph, index) => {
+
+      paragraph.style.color = 'darkgreen'; // Change text color
+
+      paragraph.style.backgroundColor = '#e0f7fa'; // Change background color
+
+
+
+      // Add a dynamic message
+
+      paragraph.innerHTML += `<br><em>This is paragraph ${index + 1} updated using JavaScript!</em>`;
+
+    });
+
+
+
+    // 3. Adding Interactivity with a Button
+
+
+
+    // Function to generate random color
+
+    function getRandomColor() {
+
+      const letters = '0123456789ABCDEF';
+
+      let color = '#';
+
+      for (let i = 0; i < 6; i++) {
+
+        color += letters[Math.floor(Math.random() * 16)];
+
+      }
+
+      return color;
+
+    }
+
+
+
+    // Add an event listener to the button to change the background color of the body
+
+    changeColorBtn.addEventListener('click', () => {
+
+      const newColor = getRandomColor();
+
+      document.body.style.backgroundColor = newColor;
+
+      alert(`Background color changed to: ${newColor}`);
+
+    });
+
+
+
+    // 4. Real-Time Window Information Using BOM
+
+
+
+    // Function to update window size in real-time
+
+    function updateWindowSize() {
+
+      const width = window.innerWidth;
+
+      const height = window.innerHeight;
+
+      windowSizeDisplay.textContent = `${width}px (width) x ${height}px (height)`;
+
+    }
+
+
+
+    // Call the updateWindowSize function on page load
+
+    updateWindowSize();
+
+
+
+    // Update the window size when the browser window is resized
+
+    window.addEventListener('resize', updateWindowSize);
+
+  </script>
+
+
+
+</body>
+
+</html>
