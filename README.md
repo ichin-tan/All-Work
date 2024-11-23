@@ -17,15 +17,3 @@ This is my space to:
 
 Disclaimer
 The content here is unorganized and may not reflect polished, production-level work. For structured and completed projects, check out my other repositories.
-
-
-
-
-
-
-
-
-
-
-
-ChatGPT can make mistakes. Check important info.
