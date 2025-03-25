@@ -52,11 +52,11 @@
 
   <!-- Balloons -->
   <div id="balloon1" class="balloon" style="background-color: red;"></div>
-  <!-- <div id="balloon2" class="balloon" style="background-color: yellow;"></div>
+  <div id="balloon2" class="balloon" style="background-color: yellow;"></div>
   <div id="balloon3" class="balloon" style="background-color: green;"></div>
   <div id="balloon4" class="balloon" style="background-color: blue;"></div>
   <div id="balloon5" class="balloon" style="background-color: purple;"></div>
-  <div id="balloon6" class="balloon" style="background-color: orange;"></div> -->
+  <div id="balloon6" class="balloon" style="background-color: orange;"></div>
 
   <script>
     // Select all balloons
@@ -123,7 +123,7 @@
       poppedBalloons++; // Increment popped balloons count
 
       // Speed up remaining balloons
-      speedMultiplier += 0.5;
+      speedMultiplier *= 2;
 
       // Check if all balloons are popped
       if (poppedBalloons === balloons.length) {

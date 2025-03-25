@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  IntroSwiftUI
+
+  Created by CP on 30/01/25.
+  
+*/
+
+"Welcome to my application" = "Bienvenue sur ma candidature";
+"Save" = "Sauvegarder";
+"Cancel" = "Annuler";
