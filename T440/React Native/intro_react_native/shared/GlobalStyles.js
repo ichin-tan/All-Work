@@ -8,7 +8,7 @@ const globalStyles = StyleSheet.create({
       marginTop: 50,
       alignItems: 'center',
       justifyContent: 'center',
-      flexDirection: 'row'
+      flexDirection: 'column'
 
     },
   
