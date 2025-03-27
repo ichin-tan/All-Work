@@ -1,7 +1,9 @@
 // BookList.js
 
-import { Button, StyleSheet, Text, View, StatusBar, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { FIREBASE_DB } from "../config/FirebaseConfig";
 
 const NewBook = () => {
 
@@ -9,7 +11,28 @@ const NewBook = () => {
     const [bookAuthor, setBookAuthor] = useState('');
     const [bookGenre, setBookGenre] = useState('')
 
-    
+    const addNewBook = async () => {
+        if (bookName === '' || bookAuthor === '' || bookGenre === '') {
+            Alert.alert("Error!", "Please provide all details for the book");
+            return;
+        }
+
+        try {
+            const collectionRef = collection(FIREBASE_DB, "BookDB");
+            const bookData = {
+                name: bookName,
+                author: bookAuthor,
+                genre: bookGenre
+            }
+            const docRef = await addDoc(collectionRef, bookData);
+            setBookName('');
+            setBookAuthor('');
+            setBookGenre('');
+            Alert.alert(`${bookName} added: ${docRef.id}`)
+        } catch (err) {
+            console.log("Error adding the book:", err);
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -39,7 +62,9 @@ const NewBook = () => {
                 autoCapitalize="words"
                 onChangeText={(text) => setBookGenre(text)} />
 
-            <TouchableOpacity style={styles.buttonStyle}>
+            <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={addNewBook}>
                 <Text style={styles.buttonText}>Add Book</Text>
             </TouchableOpacity>
         </View>
