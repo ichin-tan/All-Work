@@ -1,28 +1,26 @@
-// BookList.js
-
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { useFocusEffect } from '@react-navigation/native'
 import {
+    Alert,
     FlatList,
     StyleSheet,
     Text,
     TouchableOpacity,
     View
 } from "react-native";
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { FIREBASE_DB } from "../config/FirebaseConfig";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const BookList = () => {
+const BookList = ({ navigation }) => {
 
     const [bookList, setBookList] = useState([]);
 
-    const deleteBook = () => {
-        
-    }
-
-    useEffect(() => {
-        getAllBooks();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            getAllBooks();
+        }, [])
+    );
 
     const getAllBooks = async () => {
         try {
@@ -46,8 +44,19 @@ const BookList = () => {
         }
     }
 
+    const deleteBook = async (data) => {
+        try {
+            const deleteBook = doc(FIREBASE_DB, "BookDB", data.id);
+            await deleteDoc(deleteBook);
+            Alert.alert(`${data.name} book deleted.`);
+            getAllBooks();
+        } catch (error) {
+            console.log("Error deleting the book: ", error)
+        }
+    }
+
     const BookItem = ({ item }) => (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => showBookDetail(item)}>
             <View style={styles.mainView}>
                 <View style={styles.subViewContainer}>
                     <View style={styles.subView}>
@@ -58,15 +67,25 @@ const BookList = () => {
                         style={{ marginLeft: 'auto' }}
                         name='trash'
                         color='white'
-                        size={24} />
+                        size={24}
+                        onPress={() => deleteBook(item)} />
                 </View>
             </View>
         </TouchableOpacity>
     );
 
+    const ItemSeparator = () => (
+        <View style={{ height: 5 }} />
+    );
+
+    const showBookDetail = (item) => {
+        navigation.navigate("BookDetail", { bookDetail: item });
+    }
+
     return (
         <View style={styles.container}>
             <FlatList
+                ItemSeparatorComponent={ItemSeparator}
                 keyExtractor={(item) => { return item.id }}
                 data={bookList}
                 renderItem={({ item }) => <BookItem item={item} />} />
