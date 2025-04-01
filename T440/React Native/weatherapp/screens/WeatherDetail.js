@@ -8,7 +8,7 @@ const WeatherDetail = ({ route }) => {
     const condition = weather.weather[0].main.toLowerCase();
     if (condition.includes('rain')) return 'https://images.unsplash.com/photo-1519692933481-e162a57d6721';
     if (condition.includes('cloud')) return 'https://images.unsplash.com/photo-1499346030926-9a72daac6c63';
-    return 'https://images.unsplash.com/photo-1592210454359-9047f67a7cc1';
+    return 'https://4kwallpapers.com/images/wallpapers/sunny-day-daytime-landscape-sun-rays-river-mountains-5k-8k-1440x2560-572.jpg';
   };
 
   return (

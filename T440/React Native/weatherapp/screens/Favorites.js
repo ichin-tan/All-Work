@@ -8,7 +8,7 @@ const Favorites = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);
   const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState({});
-  const API_KEY = 'your-openweathermap-api-key';
+  const API_KEY = '';
 
   useEffect(() => {
     fetchFavorites();
