@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ImageBackground } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../Config';
+import { auth, db } from '../Config';
+import { doc, getDoc } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -34,20 +37,35 @@ const Login = ({ navigation }) => {
         return true;
     };
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         const isEmailValid = validateEmail(email);
         const isPasswordValid = validatePassword(password);
 
         if (isEmailValid && isPasswordValid) {
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    AsyncStorage.setItem('isLoggedIn', 'true'); // Set flag
+            setLoading(true);
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Fetch user data from Firestore
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                if (userDoc.exists()) {
+                    const userData = {
+                        uid: user.uid,
+                        ...userDoc.data()
+                    };
+                    await AsyncStorage.setItem('user', JSON.stringify(userData));
+                    
                     navigation.reset({
                         index: 0,
                         routes: [{ name: 'Home' }],
                     });
-                })
-                .catch(error => alert(error.message));
+                }
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
@@ -63,6 +81,8 @@ const Login = ({ navigation }) => {
                         setEmail(text);
                         validateEmail(text);
                     }}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
                 />
                 {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
                 <TextInput
@@ -76,7 +96,12 @@ const Login = ({ navigation }) => {
                     secureTextEntry
                 />
                 {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
-                <Button title="Login" onPress={handleLogin} color="#FFD700" />
+                <Button 
+                    title={loading ? "Signing In..." : "Login"} 
+                    onPress={handleLogin} 
+                    color="#FFD700" 
+                    disabled={loading}
+                />
                 <Text style={styles.link} onPress={() => navigation.navigate('Signup')}>
                     New here? Sign Up
                 </Text>

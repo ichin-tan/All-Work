@@ -1,14 +1,32 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../Config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Signup = ({ navigation }) => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const validateName = (name) => {
+        if (!name) {
+            setNameError('Name is required');
+            return false;
+        } else if (name.length < 2) {
+            setNameError('Name must be at least 2 characters');
+            return false;
+        }
+        setNameError('');
+        return true;
+    };
 
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,32 +53,68 @@ const Signup = ({ navigation }) => {
         return true;
     };
 
+    const validateConfirmPassword = (confirmPassword) => {
+        if (!confirmPassword) {
+            setConfirmPasswordError('Please confirm your password');
+            return false;
+        } else if (confirmPassword !== password) {
+            setConfirmPasswordError('Passwords do not match');
+            return false;
+        }
+        setConfirmPasswordError('');
+        return true;
+    };
+
     const handleSignup = async () => {
+        const isNameValid = validateName(name);
         const isEmailValid = validateEmail(email);
         const isPasswordValid = validatePassword(password);
+        const isConfirmPasswordValid = validateConfirmPassword(confirmPassword);
 
-        if (isEmailValid && isPasswordValid) {
+        if (isNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid) {
+            setLoading(true);
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                await setDoc(doc(db, 'users', user.uid), {
+                
+                const userData = {
+                    uid: user.uid,
+                    name: name,
                     email: user.email,
                     favorites: [],
-                });
-                await AsyncStorage.setItem('isLoggedIn', 'true'); // Set flag
+                };
+
+                await setDoc(doc(db, 'users', user.uid), userData);
+                await AsyncStorage.setItem('user', JSON.stringify(userData));
+                
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'Home' }],
                 });
             } catch (error) {
                 alert(error.message);
+            } finally {
+                setLoading(false);
             }
         }
     };
+
     return (
         <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }} style={styles.background}>
             <View style={styles.container}>
                 <Text style={styles.title}>Get Started</Text>
+                
+                <TextInput
+                    style={styles.input}
+                    placeholder="Full Name"
+                    value={name}
+                    onChangeText={(text) => {
+                        setName(text);
+                        validateName(text);
+                    }}
+                />
+                {nameError ? <Text style={styles.error}>{nameError}</Text> : null}
+                
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
@@ -69,8 +123,11 @@ const Signup = ({ navigation }) => {
                         setEmail(text);
                         validateEmail(text);
                     }}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
                 />
                 {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+                
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
@@ -82,7 +139,25 @@ const Signup = ({ navigation }) => {
                     secureTextEntry
                 />
                 {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
-                <Button title="Sign Up" onPress={handleSignup} color="#FFD700" />
+                
+                <TextInput
+                    style={styles.input}
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChangeText={(text) => {
+                        setConfirmPassword(text);
+                        validateConfirmPassword(text);
+                    }}
+                    secureTextEntry
+                />
+                {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
+                
+                <Button 
+                    title={loading ? "Creating Account..." : "Sign Up"} 
+                    onPress={handleSignup} 
+                    color="#FFD700" 
+                    disabled={loading}
+                />
                 <Text style={styles.link} onPress={() => navigation.navigate('Login')}>
                     Already have an account? Login
                 </Text>

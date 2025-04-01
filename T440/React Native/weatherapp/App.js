@@ -10,6 +10,7 @@ import Signup from './screens/Signup';
 import Home from './screens/Home';
 import Favorites from './screens/Favorites';
 import Profile from './screens/Profile';
+import EditProfile from './screens/EditProfile'; // Add this import
 import WeatherDetail from './screens/WeatherDetail';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -58,6 +59,26 @@ const HomeTabs = () => (
   </Tab.Navigator>
 );
 
+const MainStack = () => (
+  <NativeStack.Navigator>
+    <NativeStack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+    <NativeStack.Screen
+      name="WeatherDetails"
+      component={WeatherDetail}
+      options={{ headerStyle: { backgroundColor: '#1E90FF' }, headerTintColor: '#FFF' }}
+    />
+    <NativeStack.Screen
+      name="EditProfile"
+      component={EditProfile}
+      options={{ 
+        headerStyle: { backgroundColor: '#1E90FF' }, 
+        headerTintColor: '#FFF',
+        title: 'Edit Profile'
+      }}
+    />
+  </NativeStack.Navigator>
+);
+
 const AuthStack = () => (
   <NativeStack.Navigator>
     <NativeStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
@@ -71,18 +92,18 @@ const App = () => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const loggedIn = await AsyncStorage.getItem('isLoggedIn');
-        console.log('Initial isLoggedIn from AsyncStorage:', loggedIn);
-        setIsLoggedIn(loggedIn === 'true');
+        const userJson = await AsyncStorage.getItem('user'); // Changed from isLoggedIn to user
+        const loggedIn = userJson !== null;
+        console.log('Initial auth status from AsyncStorage:', loggedIn);
+        setIsLoggedIn(loggedIn);
 
         const unsubscribe = auth.onAuthStateChanged(user => {
           console.log('onAuthStateChanged user:', user ? user.email : 'null');
           if (user) {
             setIsLoggedIn(true);
-            AsyncStorage.setItem('isLoggedIn', 'true');
           } else {
             setIsLoggedIn(false);
-            AsyncStorage.setItem('isLoggedIn', 'false');
+            AsyncStorage.removeItem('user');
           }
         });
         return () => unsubscribe();
@@ -107,14 +128,7 @@ const App = () => {
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <NativeStack.Navigator>
-          <NativeStack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
-          <NativeStack.Screen
-            name="WeatherDetails"
-            component={WeatherDetail}
-            options={{ headerStyle: { backgroundColor: '#1E90FF' }, headerTintColor: '#FFF' }}
-          />
-        </NativeStack.Navigator>
+        <MainStack /> // Changed from inline navigator to MainStack component
       ) : (
         <AuthStack />
       )}
