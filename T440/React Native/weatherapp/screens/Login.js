@@ -40,7 +40,13 @@ const Login = ({ navigation }) => {
 
         if (isEmailValid && isPasswordValid) {
             signInWithEmailAndPassword(auth, email, password)
-                .then(() => navigation.navigate('Home'))
+                .then(() => {
+                    AsyncStorage.setItem('isLoggedIn', 'true'); // Set flag
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Home' }],
+                    });
+                })
                 .catch(error => alert(error.message));
         }
     };

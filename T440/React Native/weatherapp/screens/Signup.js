@@ -47,13 +47,16 @@ const Signup = ({ navigation }) => {
                     email: user.email,
                     favorites: [],
                 });
-                navigation.navigate('Home');
+                await AsyncStorage.setItem('isLoggedIn', 'true'); // Set flag
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Home' }],
+                });
             } catch (error) {
                 alert(error.message);
             }
         }
     };
-
     return (
         <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }} style={styles.background}>
             <View style={styles.container}>
@@ -89,39 +92,39 @@ const Signup = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    background: { 
-        flex: 1, 
-        justifyContent: 'center' 
+    background: {
+        flex: 1,
+        justifyContent: 'center'
     },
     container: {
-        padding: 20, 
-        backgroundColor: 'rgba(0,0,0,0.6)', 
-        borderRadius: 15, 
-        margin: 20 
+        padding: 20,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        borderRadius: 15,
+        margin: 20
     },
-    title: { 
-        fontSize: 34, 
-        color: '#FFF', 
-        textAlign: 'center', 
-        marginBottom: 20, 
-        fontWeight: 'bold' 
+    title: {
+        fontSize: 34,
+        color: '#FFF',
+        textAlign: 'center',
+        marginBottom: 20,
+        fontWeight: 'bold'
     },
-    input: { 
-        backgroundColor: '#FFF', 
-        padding: 12, 
-        marginVertical: 10, 
-        borderRadius: 8 
+    input: {
+        backgroundColor: '#FFF',
+        padding: 12,
+        marginVertical: 10,
+        borderRadius: 8
     },
-    error: { 
-        color: '#FF4500', 
-        fontSize: 14, 
-        marginBottom: 10 
+    error: {
+        color: '#FF4500',
+        fontSize: 14,
+        marginBottom: 10
     },
-    link: { 
-        color: '#FFD700', 
-        textAlign: 'center', 
-        marginTop: 15, 
-        fontSize: 16 
+    link: {
+        color: '#FFD700',
+        textAlign: 'center',
+        marginTop: 15,
+        fontSize: 16
     },
 });
 
