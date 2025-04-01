@@ -32,13 +32,10 @@ const Profile = ({ navigation }) => {
   };
 
   useEffect(() => {
-    // Initial data fetch
     fetchUserData();
 
-    // Subscribe to focus events
     const unsubscribe = navigation.addListener('focus', fetchUserData);
 
-    // Cleanup the subscription
     return unsubscribe;
   }, [navigation]);
 

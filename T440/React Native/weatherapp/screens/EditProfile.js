@@ -31,12 +31,9 @@ const EditProfile = ({ navigation, route }) => {
 
         setLoading(true);
         try {
-            // Update in Firestore
             await updateDoc(doc(db, 'users', userData.uid), {
                 name: name
             });
-
-            // Update in AsyncStorage
             const updatedUser = {
                 ...userData,
                 name: name

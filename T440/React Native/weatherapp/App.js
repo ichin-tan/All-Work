@@ -10,7 +10,7 @@ import Signup from './screens/Signup';
 import Home from './screens/Home';
 import Favorites from './screens/Favorites';
 import Profile from './screens/Profile';
-import EditProfile from './screens/EditProfile'; // Add this import
+import EditProfile from './screens/EditProfile';
 import WeatherDetail from './screens/WeatherDetail';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -92,7 +92,7 @@ const App = () => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const userJson = await AsyncStorage.getItem('user'); // Changed from isLoggedIn to user
+        const userJson = await AsyncStorage.getItem('user');
         const loggedIn = userJson !== null;
         console.log('Initial auth status from AsyncStorage:', loggedIn);
         setIsLoggedIn(loggedIn);
@@ -128,7 +128,7 @@ const App = () => {
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <MainStack /> // Changed from inline navigator to MainStack component
+        <MainStack />
       ) : (
         <AuthStack />
       )}
