@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Card from '../components/Card';
 import Loader from '../components/Loader';
@@ -25,10 +25,6 @@ const HomeScreen = () => {
         fetchExchanges();
     }, []);
 
-    const navigateToFavorites = () => {
-        navigation.navigate('Favorites');
-    };
-
     const navigateToDetail = (crypto) => {
         navigation.navigate('CryptoDetail', { cryptoId: crypto.id });
     };
@@ -39,12 +35,6 @@ const HomeScreen = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Crypto Exchanges</Text>
-                <TouchableOpacity onPress={navigateToFavorites} style={styles.favoritesButton}>
-                    <Text style={styles.favoritesButtonText}>MY EXCHANGE</Text>
-                </TouchableOpacity>
-            </View>
             <FlatList
                 data={exchanges}
                 keyExtractor={(item) => item.id.toString()}
@@ -62,29 +52,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F5F6FA',
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 16,
-        backgroundColor: '#6C5CE7',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#FFFFFF',
-    },
-    favoritesButton: {
-        backgroundColor: '#FD79A8',
-        padding: 10,
-        borderRadius: 5,
-    },
-    favoritesButtonText: {
-        color: '#FFFFFF',
-        fontWeight: 'bold',
-    },
     listContent: {
         paddingBottom: 20,
+        paddingTop: 10,
     },
 });
 

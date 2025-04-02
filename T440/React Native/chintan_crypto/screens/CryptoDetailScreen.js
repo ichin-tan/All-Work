@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { getCryptoDetails } from '../api/ApiHelper';
 import { addFavorite } from '../firebase/FirebaseHelper';
 import Loader from '../components/Loader';
 import { Alert } from 'react-native';
 
-const CryptoDetailScreen = ({ route }) => {
+const CryptoDetailScreen = ({ route, navigation }) => {
     const { cryptoId } = route.params;
     const [crypto, setCrypto] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -28,14 +29,26 @@ const CryptoDetailScreen = ({ route }) => {
     const handleAddFavorite = async () => {
         try {
             const addedFavorite = await addFavorite(crypto);
-            console.log(addedFavorite);
-            
             Alert.alert('Success', `${crypto.name} added to favorites!`);
         } catch (error) {
             console.error('Error adding favorite:', error);
             Alert.alert('Error', 'Failed to add to favorites');
         }
     };
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerLeft: () => (
+                <MaterialIcons 
+                    name="arrow-back" 
+                    size={24} 
+                    color="#FFFFFF" 
+                    style={{ marginLeft: 0 }}
+                    onPress={() => navigation.goBack()}
+                />
+            ),
+        });
+    }, [navigation]);
 
     if (loading || !crypto) {
         return <Loader />;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { MaterialIcons } from '@expo/vector-icons';
 import HomeScreen from './screens/HomeScreen';
 import CryptoDetailScreen from './screens/CryptoDetailScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
@@ -19,22 +20,38 @@ const App = () => {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
+          headerBackTitleVisible: false, // This removes the back button title
         }}
       >
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: 'Crypto Exchanges' }}
+          options={({ navigation }) => ({
+            title: 'Crypto Exchanges',
+            headerRight: () => (
+              <MaterialIcons 
+                name="favorite" 
+                size={24} 
+                color="#FFFFFF" 
+                style={{ marginRight: 0 }}
+                onPress={() => navigation.navigate('Favorites')}
+              />
+            ),
+          })}
         />
         <Stack.Screen
           name="CryptoDetail"
           component={CryptoDetailScreen}
-          options={{ title: 'Crypto Detail' }}
+          options={({ route }) => ({
+            title: route.params.cryptoId,
+          })}
         />
         <Stack.Screen
           name="Favorites"
           component={FavoritesScreen}
-          options={{ title: 'My Favorites' }}
+          options={{
+            title: 'My Favorites',
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

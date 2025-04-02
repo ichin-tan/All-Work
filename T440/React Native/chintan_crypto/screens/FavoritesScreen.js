@@ -1,32 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, FlatList, StyleSheet, Text, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { MaterialIcons } from '@expo/vector-icons';
 import FavCard from '../components/FavCard';
 import { getFavorites, clearFavorites, removeFavorite } from '../firebase/FirebaseHelper';
 import Loader from '../components/Loader';
 
-const FavoritesScreen = () => {
+const FavoritesScreen = ({ navigation }) => {
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(true);
-    const navigation = useNavigation();
-
-    useEffect(() => {
-        const fetchFavorites = async () => {
-            try {
-                const data = await getFavorites();
-                console.log(data);
-                
-                setFavorites(data);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        const unsubscribe = navigation.addListener('focus', fetchFavorites);
-        return unsubscribe;
-    }, [navigation]);
 
     const handleClearFavorites = () => {
         Alert.alert(
@@ -39,10 +21,14 @@ const FavoritesScreen = () => {
                     style: 'destructive',
                     onPress: async () => {
                         try {
+                            setLoading(true);
                             await clearFavorites();
                             setFavorites([]);
                         } catch (error) {
                             console.error('Error clearing favorites:', error);
+                            Alert.alert('Error', 'Failed to clear favorites');
+                        } finally {
+                            setLoading(false);
                         }
                     },
                 },
@@ -50,13 +36,50 @@ const FavoritesScreen = () => {
         );
     };
 
+    useEffect(() => {
+        const fetchFavorites = async () => {
+            try {
+                const data = await getFavorites();
+                setFavorites(data);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        navigation.setOptions({
+            headerRight: () => (
+                <MaterialIcons
+                    name="delete-sweep"
+                    size={24}
+                    color={favorites.length === 0 ? '#DFE6E9' : '#FFFFFF'}
+                    style={{ marginRight: 0 }}
+                    onPress={handleClearFavorites}
+                    disabled={favorites.length === 0}
+                />
+            ),
+            headerLeft: () => (
+                <MaterialIcons
+                    name="arrow-back"
+                    size={24}
+                    color="#FFFFFF"
+                    style={{ marginLeft: 0 }}
+                    onPress={() => navigation.goBack()}
+                />
+            ),
+
+        });
+
+        const unsubscribe = navigation.addListener('focus', fetchFavorites);
+        return unsubscribe;
+    }, [navigation, favorites.length]);
+
     const handleRemoveFavorite = async (crypto) => {
-        console.log(crypto);
-        
         try {
             setLoading(true);
             await removeFavorite(crypto.docId);
-            setFavorites(prev => prev.filter(fav => fav.id !== crypto.id));
+            setFavorites(prev => prev.filter(fav => fav.docId !== crypto.docId));
         } catch (error) {
             console.error('Error removing favorite:', error);
             Alert.alert('Error', 'Failed to remove favorite');
@@ -75,17 +98,6 @@ const FavoritesScreen = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>My Favorites</Text>
-                <TouchableOpacity
-                    onPress={handleClearFavorites}
-                    style={[styles.clearButton, favorites.length === 0 && styles.disabledButton]}
-                    disabled={favorites.length === 0}
-                >
-                    <Text style={styles.clearButtonText}>CLEAR FAVORITES</Text>
-                </TouchableOpacity>
-            </View>
-
             {favorites.length === 0 ? (
                 <View style={styles.emptyContainer}>
                     <Text style={styles.emptyText}>No currency found</Text>
@@ -93,7 +105,7 @@ const FavoritesScreen = () => {
             ) : (
                 <FlatList
                     data={favorites}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.docId}
                     renderItem={({ item }) => (
                         <FavCard
                             crypto={item}
@@ -113,30 +125,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F5F6FA',
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 16,
-        backgroundColor: '#6C5CE7',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#FFFFFF',
-    },
-    clearButton: {
-        backgroundColor: '#D63031',
-        padding: 10,
-        borderRadius: 5,
-    },
-    disabledButton: {
-        backgroundColor: '#DFE6E9',
-    },
-    clearButtonText: {
-        color: '#FFFFFF',
-        fontWeight: 'bold',
-    },
     emptyContainer: {
         flex: 1,
         justifyContent: 'center',
@@ -148,6 +136,7 @@ const styles = StyleSheet.create({
     },
     listContent: {
         paddingBottom: 20,
+        paddingTop: 10,
     },
 });
 
