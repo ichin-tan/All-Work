@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../Config';
@@ -100,7 +100,7 @@ const Signup = ({ navigation }) => {
     };
 
     return (
-        <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }} style={styles.background}>
+        <ImageBackground source={require('../assets/default.png')} style={styles.background}>
             <View style={styles.container}>
                 <Text style={styles.title}>Get Started</Text>
                 
@@ -152,12 +152,13 @@ const Signup = ({ navigation }) => {
                 />
                 {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
                 
-                <Button 
-                    title={loading ? "Creating Account..." : "Sign Up"} 
+                <TouchableOpacity                    
+                    style={styles.buttonStyle}
                     onPress={handleSignup} 
-                    color="#FFD700" 
-                    disabled={loading}
-                />
+                >
+                    <Text style={styles.buttonText}>{loading ? "Creating Account..." : "Sign Up"}</Text>
+                </TouchableOpacity>
+
                 <Text style={styles.link} onPress={() => navigation.navigate('Login')}>
                     Already have an account? Login
                 </Text>
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
     },
     container: {
         padding: 20,
-        backgroundColor: 'rgba(0,0,0,0.6)',
+        backgroundColor: 'rgba(0,0,0,0.8)',
         borderRadius: 15,
         margin: 20
     },
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         padding: 12,
         marginVertical: 10,
-        borderRadius: 8
+        borderRadius: 10
     },
     error: {
         color: '#FF4500',
@@ -196,11 +197,23 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     link: {
-        color: '#FFD700',
+        color: '#2BD9FE',
         textAlign: 'center',
         marginTop: 15,
         fontSize: 16
     },
+    buttonStyle: {
+        backgroundColor: '#FFD700',
+        padding: 15,
+        borderRadius: 8,
+        marginVertical: 15,
+        alignItems: 'center'
+    },
+    buttonText: {
+        color: '#000',
+        fontWeight: 'bold',
+        fontSize: 16
+    },    
 });
 
 export default Signup;

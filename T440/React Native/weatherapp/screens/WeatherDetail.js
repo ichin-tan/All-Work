@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
-// import { weatherImages } from './Home';
 
 const WeatherDetail = ({ route }) => {
     const { weather } = route.params;
-    const [imageLoaded, setImageLoaded] = useState(false); // Track image load state
+    const [imageLoaded, setImageLoaded] = useState(false);
 
     const getBackgroundImage = (weather) => {
         if (!weather || !weather.weather || !weather.weather[0]) {
-          return require('../assets/default.png'); // Fallback if weather data is invalid
+          return require('../assets/default.png');
         }
       
         const condition = weather.weather[0].main.toLowerCase();
-        const currentTime = weather.dt; // Current time in Unix timestamp (seconds)
-        const sunrise = weather.sys.sunrise; // Sunrise time in Unix timestamp
-        const sunset = weather.sys.sunset; // Sunset time in Unix timestamp
+        const currentTime = weather.dt;
+        const sunrise = weather.sys.sunrise;
+        const sunset = weather.sys.sunset;
       
-        // Determine if it's day or night
         const isDay = currentTime >= sunrise && currentTime < sunset;
       
         if (condition.includes('rain')) {
@@ -29,11 +27,11 @@ const WeatherDetail = ({ route }) => {
             : require('../assets/cloud-night.png');
         } else {
           return isDay
-            ? require('../assets/sun.png') // Clear day
-            : require('../assets/moon.png'); // Clear night
+            ? require('../assets/sun.png')
+            : require('../assets/moon.png');
         }
       };
-    const backgroundImage = getBackgroundImage(weather); // Compute once outside render
+    const backgroundImage = getBackgroundImage(weather);
 
     return (
         <ImageBackground
@@ -67,7 +65,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#000', // Black background during load
+        backgroundColor: '#000',
     },
     container: {
         padding: 20,

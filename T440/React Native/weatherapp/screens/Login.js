@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../Config';
 import { doc, getDoc } from 'firebase/firestore';
@@ -69,7 +69,7 @@ const Login = ({ navigation }) => {
     };
 
     return (
-        <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }} style={styles.background}>
+        <ImageBackground source={require('../assets/default.png')} style={styles.background}>
             <View style={styles.container}>
                 <Text style={styles.title}>Welcome Back</Text>
                 <TextInput
@@ -95,12 +95,12 @@ const Login = ({ navigation }) => {
                     secureTextEntry
                 />
                 {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
-                <Button 
-                    title={loading ? "Signing In..." : "Login"} 
+                <TouchableOpacity                    
+                    style={styles.buttonStyle}
                     onPress={handleLogin} 
-                    color="#FFD700" 
-                    disabled={loading}
-                />
+                >
+                    <Text style={styles.buttonText}>{loading ? "Signing In..." : "Login"}</Text>
+                </TouchableOpacity>
                 <Text style={styles.link} onPress={() => navigation.navigate('Signup')}>
                     New here? Sign Up
                 </Text>
@@ -116,21 +116,42 @@ const styles = StyleSheet.create({
     },
     container: {
         padding: 20,
-        backgroundColor: 'rgba(0,0,0,0.6)',
+        backgroundColor: 'rgba(0,0,0,0.8)',
         borderRadius: 15,
         margin: 20
     },
     title: {
-        fontSize: 34, color: '#FFF', textAlign: 'center', marginBottom: 20, fontWeight: 'bold'
+        fontSize: 34, color: '#FFF', 
+        textAlign: 'center', 
+        marginBottom: 20, 
+        fontWeight: 'bold'
     },
     input: {
-        backgroundColor: '#FFF', padding: 12, marginVertical: 10, borderRadius: 8
+        backgroundColor: '#FFF', 
+        padding: 12, 
+        marginVertical: 10, 
+        borderRadius: 10
     },
     error: {
         color: '#FF4500', fontSize: 14, marginBottom: 10
     },
+    buttonStyle: {
+        backgroundColor: '#FFD700',
+        padding: 15,
+        borderRadius: 8,
+        marginVertical: 15,
+        alignItems: 'center'
+    },
+    buttonText: {
+        color: '#000',
+        fontWeight: 'bold',
+        fontSize: 16
+    },    
     link: {
-        color: '#FFD700', textAlign: 'center', marginTop: 15, fontSize: 16
+        color: '#2BD9FE', 
+        textAlign: 'center', 
+        marginTop: 15, 
+        fontSize: 16
     },
 });
 
