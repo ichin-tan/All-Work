@@ -8,7 +8,7 @@ const Favorites = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);
   const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState({});
-  const API_KEY = '';
+  const API_KEY = '7be661621bd1b79439fc2c635d4a6391';
 
   useEffect(() => {
     fetchFavorites();
