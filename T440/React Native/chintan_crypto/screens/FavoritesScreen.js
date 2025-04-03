@@ -69,6 +69,8 @@ const FavoritesScreen = ({ navigation }) => {
             ),
 
         });
+
+        return navigation.addListener('focus', fetchFavorites);
     }, [favorites.length]);
 
     const handleRemoveFavorite = async (crypto) => {
