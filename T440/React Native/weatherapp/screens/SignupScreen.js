@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../config/Config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles as globalStyles, headerOptions } from '../global/Theme';
+import { AuthService } from '../helper/FirebaseHelper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const SignupScreen = ({ navigation }) => {
@@ -24,12 +21,9 @@ const SignupScreen = ({ navigation }) => {
             title: 'Create Account',
             headerLeft: () => (
                 <TouchableOpacity 
-                    onPress={() => 
-                        navigation.goBack()
-                    } 
-                    style={{ 
-                        marginLeft: 0 
-                    }}>
+                    onPress={() => navigation.goBack()} 
+                    style={{ marginLeft: 0 }}
+                >
                     <Icon name="arrow-back" size={24} color={'#F8F9FA'} />
                 </TouchableOpacity>
             ),
@@ -94,19 +88,7 @@ const SignupScreen = ({ navigation }) => {
         if (isNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid) {
             setLoading(true);
             try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                const userData = {
-                    uid: user.uid,
-                    name: name,
-                    email: user.email,
-                    favorites: [],
-                };
-
-                await setDoc(doc(db, 'users', user.uid), userData);
-                await AsyncStorage.setItem('user', JSON.stringify(userData));
-
+                await AuthService.signUp(email, password, name);
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'HomeTabs' }],
@@ -186,9 +168,7 @@ const SignupScreen = ({ navigation }) => {
 
                 <TouchableOpacity
                     style={{ marginTop: 16 }}
-                    onPress={() => 
-                        navigation.goBack()
-                    }
+                    onPress={() => navigation.goBack()}
                 >
                     <Text style={{ 
                         color: '#4361EE', 

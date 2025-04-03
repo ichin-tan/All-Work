@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth,db } from '../config/Config';
-import { doc, getDoc } from 'firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles as globalStyles, headerOptions } from '../global/Theme';
+import { AuthService } from '../helper/FirebaseHelper';
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -52,22 +49,11 @@ const LoginScreen = ({ navigation }) => {
         if (isEmailValid && isPasswordValid) {
             setLoading(true);
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                
-                const userDoc = await getDoc(doc(db, 'users', user.uid));
-                if (userDoc.exists()) {
-                    const userData = {
-                        uid: user.uid,
-                        ...userDoc.data()
-                    };
-                    await AsyncStorage.setItem('user', JSON.stringify(userData));
-                    
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'HomeTabs' }],
-                    });
-                }
+                await AuthService.login(email, password);
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'HomeTabs' }],
+                });
             } catch (error) {
                 alert(error.message);
             } finally {

@@ -34,7 +34,7 @@ const HomeScreen = ({ navigation }) => {
                 setWeather(weatherData);
             }
         } catch (error) {
-            console.error('Error loading weather data:', error);
+            alert("'Error loading weather data!")
             setShowInput(true);
         } finally {
             setLoading(false);

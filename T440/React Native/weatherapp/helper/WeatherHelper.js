@@ -14,7 +14,6 @@ export const WeatherApi = {
       }
       return null;
     } catch (error) {
-      console.error('Error getting location weather:', error);
       throw error;
     }
   },
@@ -26,7 +25,6 @@ export const WeatherApi = {
       );
       return res.data;
     } catch (error) {
-      console.error('Error fetching weather by coordinates:', error);
       throw error;
     }
   },
@@ -51,7 +49,6 @@ export const WeatherApi = {
       }
       return null;
     } catch (error) {
-      console.error('Error getting preferred city weather:', error);
       throw error;
     }
   }

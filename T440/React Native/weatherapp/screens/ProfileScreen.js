@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { signOut } from 'firebase/auth';
-import { auth } from '../config/Config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles as globalStyles, headerOptions } from '../global/Theme';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { CommonActions } from '@react-navigation/native';
+import { AuthService } from '../helper/FirebaseHelper';
 
 const ProfileScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
@@ -25,13 +23,10 @@ const ProfileScreen = ({ navigation }) => {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const userJson = await AsyncStorage.getItem('user');
-      if (userJson) {
-        const parsedData = JSON.parse(userJson);
-        setUserData(parsedData);
-      }
+      const userData = await AuthService.getCurrentUser();
+      setUserData(userData);
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      alert('Error Fetching Data!');
     } finally {
       setLoading(false);
     }
@@ -39,20 +34,16 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
-      await AsyncStorage.removeItem('user');
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: 'LoginScreen' }],
-        })
-      );
+      setLoading(true);
+      await AuthService.logout();
     } catch (error) {
       console.log('Logout error:', error);
       alert('Logout failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
-
+  
   if (loading) {
     return (
       <View style={[globalStyles.container, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -82,8 +73,7 @@ const ProfileScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={[globalStyles.button, { flexDirection: 'row', justifyContent: 'center' }]}
-          onPress={() => 
-            navigation.navigate('EditProfileScreen', { userData })}
+          onPress={() => navigation.navigate('EditProfileScreen', { userData })}
         >
           <Icon name="edit" size={20} color="white" style={{ marginRight: 8 }} />
           <Text style={globalStyles.buttonText}>Edit Profile</Text>
@@ -92,9 +82,16 @@ const ProfileScreen = ({ navigation }) => {
         <TouchableOpacity
           style={[globalStyles.button, { backgroundColor: '#F72585', flexDirection: 'row', justifyContent: 'center' }]}
           onPress={handleLogout}
+          disabled={loading}
         >
-          <Icon name="logout" size={20} color="white" style={{ marginRight: 8 }} />
-          <Text style={globalStyles.buttonText}>Logout</Text>
+          {loading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <>
+              <Icon name="logout" size={20} color="white" style={{ marginRight: 8 }} />
+              <Text style={globalStyles.buttonText}>Logout</Text>
+            </>
+          )}
         </TouchableOpacity>
       </View>
     </View>
