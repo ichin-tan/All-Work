@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { auth } from './Config';
+import { auth } from './config/Config';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -12,7 +12,8 @@ import FavoritesScreen from './screens/FavoritesScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
 import WeatherDetailScreen from './screens/WeatherDetailScreen';
-import { MaterialIcons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { headerOptions, tabBarOptions } from './global/Theme';
 
 const NativeStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,71 +23,114 @@ const HomeTabs = () => (
     screenOptions={({ route }) => ({
       tabBarIcon: ({ color, size }) => {
         let iconName;
-        if (route.name === 'HomeScreen') {
+        if (route.name === 'Home') {
           iconName = 'home';
-        } else if (route.name === 'FavoritesScreen') {
+        } else if (route.name === 'Favorites') {
           iconName = 'favorite';
-        } else if (route.name === 'ProfileScreen') {
+        } else if (route.name === 'Profile') {
           iconName = 'person';
         }
-        return <MaterialIcons name={iconName} size={size} color={color} />;
+        return <Icon name={iconName} size={size} color={color} />;
       },
-      tabBarActiveTintColor: '#FFD700',
-      tabBarInactiveTintColor: '#FFF',
-      tabBarStyle: {
-        backgroundColor: '#1E90FF',
-        paddingBottom: 5,
-        height: 60,
-        borderTopWidth: 0,
-      },
+      ...tabBarOptions,
     })}
   >
     <Tab.Screen
-      name="HomeScreen"
+      name="Home"
       component={HomeScreen}
-      options={{ headerShown: false }}
+      options={{
+        ...headerOptions,
+        title: 'Weather',
+        headerLeft: null
+      }}
     />
     <Tab.Screen
-      name="FavoritesScreen"
+      name="Favorites"
       component={FavoritesScreen}
-      options={{ headerShown: false }}
+      options={{
+        ...headerOptions,
+        title: 'Favorites',
+        headerLeft: null
+      }}
     />
     <Tab.Screen
-      name="ProfileScreen"
+      name="Profile"
       component={ProfileScreen}
-      options={{ headerShown: false }}
+      options={{
+        ...headerOptions,
+        title: 'Profile',
+        headerLeft: null
+      }}
     />
   </Tab.Navigator>
 );
 
 const MainStack = () => (
-  <NativeStack.Navigator>
-    <NativeStack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+  <NativeStack.Navigator screenOptions={headerOptions}>
+    <NativeStack.Screen
+      name="HomeTabs"
+      component={HomeTabs}
+      options={{ headerShown: false }}
+    />
     <NativeStack.Screen
       name="WeatherDetailScreen"
       component={WeatherDetailScreen}
-      options={{ 
-        headerStyle: { backgroundColor: '#1E90FF' }, 
-        headerTintColor: '#FFF',
-        title: 'Weather Detail'
-       }}
+      options={({ navigation }) => ({
+        ...headerOptions,
+        title: 'Weather Details',
+        headerLeft: () => (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.goBack()
+            }
+            style={{
+              marginLeft: 0
+            }}>
+            <Icon name="arrow-back" size={24} color='#F8F9FA' />
+          </TouchableOpacity>
+        ),
+      })}
     />
     <NativeStack.Screen
       name="EditProfileScreen"
       component={EditProfileScreen}
-      options={{ 
-        headerStyle: { backgroundColor: '#1E90FF' }, 
-        headerTintColor: '#FFF',
-        title: 'Edit Profile'
-      }}
+      options={({ navigation }) => ({
+        ...headerOptions,
+        title: 'Edit Profile',
+        headerLeft: () => (
+          <TouchableOpacity 
+            onPress={() => 
+              navigation.goBack()
+            } 
+            style={{ 
+              marginLeft: 0 
+            }}>
+            <Icon name="arrow-back" size={24} color='#F8F9FA' />
+          </TouchableOpacity>
+        ),
+      })}
     />
   </NativeStack.Navigator>
 );
 
 const AuthStack = () => (
-  <NativeStack.Navigator>
-    <NativeStack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
-    <NativeStack.Screen name="SignupScreen" component={SignupScreen} options={{ headerShown: false }} />
+  <NativeStack.Navigator screenOptions={headerOptions}>
+    <NativeStack.Screen
+      name="LoginScreen"
+      component={LoginScreen}
+      options={{
+        title: 'Login',
+        headerLeft: null
+      }}
+    />
+    <NativeStack.Screen
+      name="SignupScreen"
+      component={SignupScreen}
+      options={({ navigation }) => ({
+        title: 'Create Account',
+        headerLeft: null
+      })}
+    />
   </NativeStack.Navigator>
 );
 
@@ -122,7 +166,7 @@ const App = () => {
   if (isLoggedIn === null) {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <ActivityIndicator size="large" color='#4361EE' />
       </View>
     );
   }
@@ -141,8 +185,12 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1E90FF' },
-  loadingText: { fontSize: 24, color: '#FFF', fontWeight: 'bold' },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F8F9FA'
+  },
 });
 
 export default App;

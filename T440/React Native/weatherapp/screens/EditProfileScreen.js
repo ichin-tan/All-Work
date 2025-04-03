@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { doc, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../Config';
+import { db } from '../config/Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { styles, headerOptions } from '../global/Theme';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const EditProfileScreen = ({ navigation, route }) => {
     const { userData } = route.params;
@@ -11,8 +13,22 @@ const EditProfileScreen = ({ navigation, route }) => {
     const [nameError, setNameError] = useState('');
 
     useEffect(() => {
+        navigation.setOptions({
+            ...headerOptions,
+            title: 'Edit Profile',
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => 
+                    navigation.goBack()
+                } 
+                style={{ 
+                    marginLeft: 0 
+                }}>
+                    <Icon name="arrow-back" size={24} color={'#F8F9FA'} />
+                </TouchableOpacity>
+            ),
+        });
         setName(userData?.name || '');
-    }, [userData]);
+    }, [userData, navigation]);
 
     const validateName = (name) => {
         if (!name) {
@@ -39,7 +55,6 @@ const EditProfileScreen = ({ navigation, route }) => {
                 name: name
             };
             await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
-
             navigation.goBack();
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -50,11 +65,11 @@ const EditProfileScreen = ({ navigation, route }) => {
     };
 
     return (
-        <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }} style={styles.background}>
-            <View style={styles.container}>
-                <Text style={styles.title}>Edit Profile</Text>
+        <View style={styles.container}>
+            <View style={[styles.card, { marginTop: 20 }]}>
+                <Text style={styles.title}>Edit Your Profile</Text>
                 
-                <Text style={styles.label}>Name</Text>
+                <Text style={{ color: '#212529', marginBottom: 4 }}>Name</Text>
                 <TextInput
                     style={styles.input}
                     value={name}
@@ -64,103 +79,42 @@ const EditProfileScreen = ({ navigation, route }) => {
                     }}
                     placeholder="Enter your name"
                 />
-                {nameError ? <Text style={styles.error}>{nameError}</Text> : null}
+                {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
                 
-                <Text style={styles.label}>Email</Text>
+                <Text style={{ 
+                    color: '#212529', 
+                    marginBottom: 4 
+                }}>
+                    Email
+                </Text>
                 <TextInput
-                    style={[styles.input, styles.disabledInput]}
+                    style={[styles.input, { backgroundColor: '#f0f0f0' }]}
                     value={userData?.email}
                     editable={false}
                 />
                 
                 <TouchableOpacity 
-                    style={styles.saveButton}
+                    style={styles.button}
                     onPress={handleUpdateProfile}
                     disabled={loading}
                 >
                     {loading ? (
-                        <ActivityIndicator color="#000" />
+                        <ActivityIndicator color="white" />
                     ) : (
-                        <Text style={styles.saveButtonText}>Save Changes</Text>
+                        <Text style={styles.buttonText}>Save Changes</Text>
                     )}
                 </TouchableOpacity>
                 
                 <TouchableOpacity 
-                    style={styles.cancelButton}
+                    style={[styles.button, { backgroundColor: '#F72585' }]}
                     onPress={() => navigation.goBack()}
                     disabled={loading}
                 >
-                    <Text style={styles.cancelButtonText}>Cancel</Text>
+                    <Text style={styles.buttonText}>Cancel</Text>
                 </TouchableOpacity>
             </View>
-        </ImageBackground>
+        </View>
     );
 };
-
-const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        justifyContent: 'center'
-    },
-    container: {
-        padding: 20,
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        borderRadius: 15,
-        margin: 20
-    },
-    title: {
-        fontSize: 28,
-        color: '#FFD700',
-        textAlign: 'center',
-        marginBottom: 20,
-        fontWeight: 'bold'
-    },
-    label: {
-        color: '#FFF',
-        marginBottom: 5,
-        fontSize: 16
-    },
-    input: {
-        backgroundColor: '#FFF',
-        padding: 12,
-        borderRadius: 8,
-        marginBottom: 15,
-        fontSize: 16
-    },
-    disabledInput: {
-        backgroundColor: '#DDD',
-        color: '#666'
-    },
-    error: {
-        color: '#FF4500',
-        fontSize: 14,
-        marginBottom: 15
-    },
-    saveButton: {
-        backgroundColor: '#FFD700',
-        padding: 15,
-        borderRadius: 8,
-        marginTop: 10,
-        alignItems: 'center'
-    },
-    saveButtonText: {
-        color: '#000',
-        fontWeight: 'bold',
-        fontSize: 16
-    },
-    cancelButton: {
-        padding: 15,
-        borderRadius: 8,
-        marginTop: 10,
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#FFD700'
-    },
-    cancelButtonText: {
-        color: '#FFD700',
-        fontWeight: 'bold',
-        fontSize: 16
-    }
-});
 
 export default EditProfileScreen;

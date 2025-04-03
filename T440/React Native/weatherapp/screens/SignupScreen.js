@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../Config';
+import { auth, db } from '../config/Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { styles as globalStyles, headerOptions } from '../global/Theme';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const SignupScreen = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -15,6 +17,24 @@ const SignupScreen = ({ navigation }) => {
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        navigation.setOptions({
+            ...headerOptions,
+            title: 'Create Account',
+            headerLeft: () => (
+                <TouchableOpacity 
+                    onPress={() => 
+                        navigation.goBack()
+                    } 
+                    style={{ 
+                        marginLeft: 0 
+                    }}>
+                    <Icon name="arrow-back" size={24} color={'#F8F9FA'} />
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
 
     const validateName = (name) => {
         if (!name) {
@@ -100,12 +120,12 @@ const SignupScreen = ({ navigation }) => {
     };
 
     return (
-        <ImageBackground source={require('../assets/default.png')} style={styles.background}>
-            <View style={styles.container}>
-                <Text style={styles.title}>Get Started</Text>
+        <View style={globalStyles.container}>
+            <View style={[globalStyles.card, { marginTop: 20 }]}>
+                <Text style={globalStyles.title}>Create Account</Text>
 
                 <TextInput
-                    style={styles.input}
+                    style={globalStyles.input}
                     placeholder="Full Name"
                     value={name}
                     onChangeText={(text) => {
@@ -113,10 +133,10 @@ const SignupScreen = ({ navigation }) => {
                         validateName(text);
                     }}
                 />
-                {nameError ? <Text style={styles.error}>{nameError}</Text> : null}
+                {nameError ? <Text style={globalStyles.errorText}>{nameError}</Text> : null}
 
                 <TextInput
-                    style={styles.input}
+                    style={globalStyles.input}
                     placeholder="Email"
                     value={email}
                     onChangeText={(text) => {
@@ -126,10 +146,10 @@ const SignupScreen = ({ navigation }) => {
                     keyboardType="email-address"
                     autoCapitalize="none"
                 />
-                {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+                {emailError ? <Text style={globalStyles.errorText}>{emailError}</Text> : null}
 
                 <TextInput
-                    style={styles.input}
+                    style={globalStyles.input}
                     placeholder="Password"
                     value={password}
                     onChangeText={(text) => {
@@ -138,10 +158,10 @@ const SignupScreen = ({ navigation }) => {
                     }}
                     secureTextEntry
                 />
-                {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
+                {passwordError ? <Text style={globalStyles.errorText}>{passwordError}</Text> : null}
 
                 <TextInput
-                    style={styles.input}
+                    style={globalStyles.input}
                     placeholder="Confirm Password"
                     value={confirmPassword}
                     onChangeText={(text) => {
@@ -150,70 +170,36 @@ const SignupScreen = ({ navigation }) => {
                     }}
                     secureTextEntry
                 />
-                {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
+                {confirmPasswordError ? <Text style={globalStyles.errorText}>{confirmPasswordError}</Text> : null}
 
                 <TouchableOpacity
-                    style={styles.buttonStyle}
+                    style={globalStyles.button}
                     onPress={handleSignup}
+                    disabled={loading}
                 >
-                    <Text style={styles.buttonText}>{loading ? "Creating Account..." : "Sign Up"}</Text>
+                    {loading ? (
+                        <ActivityIndicator color="white" />
+                    ) : (
+                        <Text style={globalStyles.buttonText}>Sign Up</Text>
+                    )}
                 </TouchableOpacity>
 
-                <Text style={styles.link} onPress={() => navigation.navigate('LoginScreen')}>
-                    Already have an account? Login
-                </Text>
+                <TouchableOpacity
+                    style={{ marginTop: 16 }}
+                    onPress={() => 
+                        navigation.goBack()
+                    }
+                >
+                    <Text style={{ 
+                        color: '#4361EE', 
+                        textAlign: 'center'
+                    }}>
+                        Already have an account? <Text style={{ fontWeight: 'bold' }}>Login</Text>
+                    </Text>
+                </TouchableOpacity>
             </View>
-        </ImageBackground>
+        </View>
     );
 };
-
-const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        justifyContent: 'center'
-    },
-    container: {
-        padding: 20,
-        backgroundColor: 'rgba(0,0,0,0.8)',
-        borderRadius: 15,
-        margin: 20
-    },
-    title: {
-        fontSize: 34,
-        color: '#FFF',
-        textAlign: 'center',
-        marginBottom: 20,
-        fontWeight: 'bold'
-    },
-    input: {
-        backgroundColor: '#FFF',
-        padding: 12,
-        marginVertical: 10,
-        borderRadius: 10
-    },
-    error: {
-        color: '#FF4500',
-        fontSize: 14,
-        marginBottom: 10
-    },
-    link: {
-        color: '#2BD9FE',
-        textAlign: 'center',
-        marginTop: 15,
-        fontSize: 16
-    },
-    buttonStyle: {
-        backgroundColor: '#FFD700',
-        padding: 15,
-        borderRadius: 8,
-        marginVertical: 15,
-        alignItems: 'center'
-    },
-    buttonText: {
-        color: '#000',
-        fontWeight: 'bold',
-        fontSize: 16
-    },
-});
 
 export default SignupScreen;

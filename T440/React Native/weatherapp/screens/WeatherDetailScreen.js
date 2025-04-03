@@ -1,102 +1,78 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { styles as globalStyles, headerOptions } from '../global/Theme';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const WeatherDetailScreen = ({ route }) => {
+const WeatherDetailScreen = ({ navigation, route }) => {
     const { weather } = route.params;
-    const [imageLoaded, setImageLoaded] = useState(false);
 
-    const getBackgroundImage = (weather) => {
-        if (!weather || !weather.weather || !weather.weather[0]) {
-            return require('../assets/default.png');
-        }
+    useEffect(() => {
+        navigation.setOptions({
+            ...headerOptions,
+            title: 'Weather Details',
+            headerLeft: () => (
+                <TouchableOpacity 
+                    onPress={() => 
+                        navigation.goBack()
+                    } 
+                    style={{ 
+                        marginLeft: 0 
+                    }}>
+                    <Icon name="arrow-back" size={24} color='#F8F9FA' />
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
 
-        const condition = weather.weather[0].main.toLowerCase();
-        const currentTime = weather.dt;
-        const sunrise = weather.sys.sunrise;
-        const sunset = weather.sys.sunset;
-
-        const isDay = currentTime >= sunrise && currentTime < sunset;
-
-        if (condition.includes('rain')) {
-            return isDay
-                ? require('../assets/rain-day.png')
-                : require('../assets/rain-night.png');
-        } else if (condition.includes('cloud')) {
-            return isDay
-                ? require('../assets/cloud-day.png')
-                : require('../assets/cloud-night.png');
-        } else {
-            return isDay
-                ? require('../assets/sun.png')
-                : require('../assets/moon.png');
-        }
+    const getWeatherIcon = (condition) => {
+        condition = condition.toLowerCase();
+        if (condition.includes('rain'))
+            return 'opacity';
+        if (condition.includes('cloud'))
+            return 'cloud';
+        if (condition.includes('sun'))
+            return 'sunny';
+        return 'sunny';
     };
-    const backgroundImage = getBackgroundImage(weather);
 
     return (
-        <ImageBackground
-            source={backgroundImage}
-            style={styles.background}
-            onLoad={() => setImageLoaded(true)}
-            onError={() => setImageLoaded(true)}
-        >
-            {!imageLoaded ? (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="#FFD700" />
+        <View style={globalStyles.container}>
+            <View style={[globalStyles.card, { alignItems: 'center' }]}>
+                <Icon 
+                    name={getWeatherIcon(weather?.weather[0]?.main)} 
+                    size={80} 
+                    color='#7209B7' 
+                    style={{ marginBottom: 16 }}
+                />
+                <Text style={globalStyles.weatherCity}>{weather.name}, {weather.sys.country}</Text>
+                <Text style={{ 
+                    fontSize: 18, 
+                    color: '#212529', 
+                    marginBottom: 16 }}>
+                        {weather.weather[0].description}
+                </Text>
+                <Text style={globalStyles.weatherTemp}>{Math.round(weather.main.temp)}°C</Text>
+                
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 20 }}>
+                    <View style={{ alignItems: 'center' }}>
+                        <Icon name="thermostat" size={24} color='#4895EF' />
+                        <Text style={{ color: '#212529' }}>Feels like</Text>
+                        <Text style={{ fontWeight: 'bold' }}>{weather.main.feels_like}°C</Text>
+                    </View>
+                    <View style={{ alignItems: 'center' }}>
+                        <Icon name="opacity" size={24} color='#4895EF' />
+                        <Text style={{ color: '#212529' }}>Humidity</Text>
+                        <Text style={{ fontWeight: 'bold' }}>{weather.main.humidity}%</Text>
+                    </View>
+                    <View style={{ alignItems: 'center' }}>
+                        <Icon name="air" size={24} color='#4895EF' />
+                        <Text style={{ color: '#212529' }}>Wind</Text>
+                        <Text style={{ fontWeight: 'bold' }}>{weather.wind.speed} m/s</Text>
+                    </View>
                 </View>
-            ) : (
-                <View style={styles.container}>
-                    <Text style={styles.city}>{weather.name}</Text>
-                    <Text style={styles.condition}>{weather.sys.country}</Text>
-                    <Text style={styles.condition}>{weather.weather[0].description}</Text>
-                    <Text style={styles.temp}>{Math.round(weather.main.temp)}°C</Text>
-                    <Text style={styles.detail}>Feels like: {weather.main.feels_like}°C</Text>
-                    <Text style={styles.detail}>Humidity: {weather.main.humidity}%</Text>
-                    <Text style={styles.detail}>Wind: {weather.wind.speed} m/s</Text>
-                </View>
-            )}
-        </ImageBackground>
+            </View>
+        </View>
     );
 };
-
-const styles = StyleSheet.create({
-    background: { flex: 1, justifyContent: 'center' },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#000',
-    },
-    container: {
-        padding: 20,
-        backgroundColor: 'rgba(0,0,0,0.8)',
-        borderRadius: 15,
-        margin: 20,
-    },
-    city: {
-        fontSize: 34,
-        color: '#FFD700',
-        textAlign: 'center',
-        fontWeight: 'bold',
-    },
-    temp: {
-        fontSize: 54,
-        color: '#FFF',
-        textAlign: 'center',
-        marginVertical: 10,
-    },
-    condition: {
-        fontSize: 22,
-        color: '#FFF',
-        textAlign: 'center',
-        marginBottom: 20,
-    },
-    detail: {
-        fontSize: 18,
-        color: '#FFF',
-        textAlign: 'center',
-        marginVertical: 5,
-    },
-});
 
 export default WeatherDetailScreen;

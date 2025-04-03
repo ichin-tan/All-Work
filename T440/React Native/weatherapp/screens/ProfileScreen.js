@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  ImageBackground,
-  ActivityIndicator,
-  TouchableOpacity
-} from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { signOut } from 'firebase/auth';
-import { auth } from '../Config';
+import { auth } from '../config/Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { styles as globalStyles, headerOptions } from '../global/Theme';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const ProfileScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    navigation.setOptions({
+      ...headerOptions,
+      title: 'Profile',
+    });
+    
+    const unsubscribe = navigation.addListener('focus', fetchUserData);
+    fetchUserData();
+    return unsubscribe;
+  }, [navigation]);
 
   const fetchUserData = async () => {
     try {
@@ -31,21 +36,13 @@ const ProfileScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    fetchUserData();
-
-    const unsubscribe = navigation.addListener('focus', fetchUserData);
-
-    return unsubscribe;
-  }, [navigation]);
-
   const handleLogout = async () => {
     try {
       await signOut(auth);
       await AsyncStorage.removeItem('user');
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Login' }],
+        routes: [{ name: 'LoginScreen' }],
       });
     } catch (error) {
       console.log('Logout error:', error);
@@ -55,93 +52,57 @@ const ProfileScreen = ({ navigation }) => {
 
   if (loading) {
     return (
-      <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }}
-        style={styles.background}
-      >
-        <View style={styles.container}>
-          <ActivityIndicator size="large" color="#FFD700" />
-        </View>
-      </ImageBackground>
+      <View style={[globalStyles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color='#4361EE' />
+      </View>
     );
   }
 
   return (
-    <ImageBackground
-      source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }}
-      style={styles.background}
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>Your Profile</Text>
+    <View style={globalStyles.container}>
+      <View style={[globalStyles.card, { marginTop: 20 }]}>
+        <View style={{ 
+          flexDirection: 'row', 
+          alignItems: 'center', 
+          marginBottom: 20 
+        }}>
+          <Icon name="account-circle" size={60} color='#4361EE' />
+          <Text style={[globalStyles.title, { marginLeft: 16 }]}>
+            {userData?.name || 'Guest'}
+          </Text>
+        </View>
 
-        <View style={styles.profileInfo}>
-          <Text style={styles.label}>Name:</Text>
-          <Text style={styles.info}>{userData?.name || 'Guest'}</Text>
-
-          <Text style={styles.label}>Email:</Text>
-          <Text style={styles.info}>{userData?.email}</Text>
+        <View style={{ marginBottom: 20 }}>
+          <View style={{ 
+            flexDirection: 'row', 
+            alignItems: 'center', 
+            marginBottom: 8 
+          }}>
+            <Icon name="email" size={20} color='#212529' style={{ marginRight: 8 }} />
+            <Text style={{ color: '#212529' }}>Email:</Text>
+            <Text style={{ marginLeft: 8, fontWeight: 'bold' }}>{userData?.email}</Text>
+          </View>
         </View>
 
         <TouchableOpacity
-          style={styles.editButton}
-          onPress={() => navigation.navigate('EditProfile', { userData })}
+          style={[globalStyles.button, { flexDirection: 'row', justifyContent: 'center' }]}
+          onPress={() => 
+            navigation.navigate('EditProfileScreen', { userData })}
         >
-          <Text style={styles.editButtonText}>Edit Profile</Text>
+          <Icon name="edit" size={20} color="white" style={{ marginRight: 8 }} />
+          <Text style={globalStyles.buttonText}>Edit Profile</Text>
         </TouchableOpacity>
 
-        <Button
-          title="Logout"
+        <TouchableOpacity
+          style={[globalStyles.button, { backgroundColor: '#F72585', flexDirection: 'row', justifyContent: 'center' }]}
           onPress={handleLogout}
-          color="#FF4500"
-        />
+        >
+          <Icon name="logout" size={20} color="white" style={{ marginRight: 8 }} />
+          <Text style={globalStyles.buttonText}>Logout</Text>
+        </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    justifyContent: 'center'
-  },
-  container: {
-    padding: 20,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    borderRadius: 15,
-    margin: 20
-  },
-  title: {
-    fontSize: 28,
-    color: '#FFD700',
-    textAlign: 'center',
-    marginBottom: 20,
-    fontWeight: 'bold'
-  },
-  profileInfo: {
-    marginBottom: 20,
-  },
-  label: {
-    color: '#FFD700',
-    fontSize: 16,
-    marginTop: 10,
-  },
-  info: {
-    color: '#FFF',
-    fontSize: 18,
-    marginBottom: 5,
-  },
-  editButton: {
-    backgroundColor: '#FFD700',
-    padding: 15,
-    borderRadius: 8,
-    marginVertical: 15,
-    alignItems: 'center'
-  },
-  editButtonText: {
-    color: '#000',
-    fontWeight: 'bold',
-    fontSize: 16
-  }
-});
 
 export default ProfileScreen;

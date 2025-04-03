@@ -1,49 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../Config';
+import { auth, db } from '../config/Config';
 import axios from 'axios';
+import { styles as globalStyles, headerOptions } from '../global/Theme';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const FavoritesScreen = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);
   const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState({});
+  const [loading, setLoading] = useState(false);
   const API_KEY = '7be661621bd1b79439fc2c635d4a6391';
 
   useEffect(() => {
+    navigation.setOptions({
+      ...headerOptions,
+      title: 'Favorites',
+    });
     fetchFavorites();
-  }, []);
+  }, [navigation]);
 
   const fetchFavorites = async () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    const userDoc = await getDoc(doc(db, 'users', user.uid));
-    if (userDoc.exists()) {
-      const favNames = userDoc.data().favorites || [];
-      setFavorites(favNames);
-      fetchWeatherForFavorites(favNames);
+    setLoading(true);
+    try {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const favNames = userDoc.data().favorites || [];
+        setFavorites(favNames);
+        await fetchWeatherForFavorites(favNames);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchWeatherForFavorites = async (favNames) => {
-    const weatherPromises = favNames.map(city =>
-      axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`)
-    );
-    const results = await Promise.all(weatherPromises);
-    const weatherMap = results.reduce((acc, res) => {
-      acc[res.data.name] = res.data;
-      return acc;
-    }, {});
-    setWeatherData(weatherMap);
+    try {
+      const weatherMap = {};
+  
+      for (const city of favNames) {
+        try {
+          const response = await axios.get(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+          );
+          weatherMap[response.data.name] = response.data;
+        } catch (err) {
+          console.error(`Error fetching weather for ${city}:`, err);
+        }
+      }
+  
+      setWeatherData(weatherMap);
+    } catch (error) {
+      console.error('Error fetching weather:', error);
+    }
   };
-
+  
   const addFavorite = async () => {
     if (!city) {
       alert('Please enter a city name');
       return;
     }
     try {
+      setLoading(true);
       const res = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
       );
@@ -62,60 +84,90 @@ const FavoritesScreen = ({ navigation }) => {
       setCity('');
     } catch (e) {
       alert('Invalid city or error adding favorite.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const removeFavorite = async (cityName) => {
-    const user = auth.currentUser;
-    const userRef = doc(db, 'users', user.uid);
-    const updatedFavorites = favorites.filter(fav => fav !== cityName);
-    await updateDoc(userRef, { favorites: updatedFavorites });
-    setFavorites(updatedFavorites);
-    setWeatherData(prev => {
-      const newData = { ...prev };
-      delete newData[cityName];
-      return newData;
-    });
+    try {
+      setLoading(true);
+      const user = auth.currentUser;
+      const userRef = doc(db, 'users', user.uid);
+      const updatedFavorites = favorites.filter(fav => fav !== cityName);
+      await updateDoc(userRef, { favorites: updatedFavorites });
+      setFavorites(updatedFavorites);
+      setWeatherData(prev => {
+        const newData = { ...prev };
+        delete newData[cityName];
+        return newData;
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const renderFavoriteItem = ({ item }) => (
+    <TouchableOpacity
+      style={[globalStyles.card, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}
+      onPress={() => 
+        navigation.navigate('WeatherDetailScreen', { weather: weatherData[item] }
+      )}
+    >
+      <View>
+        <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{item}</Text>
+        {weatherData[item] && (
+          <Text style={{ color: '#212529' }}>
+            {Math.round(weatherData[item].main.temp)}°C | {weatherData[item].weather[0].description}
+          </Text>
+        )}
+      </View>
+      <TouchableOpacity onPress={() => 
+        removeFavorite(item)
+      }>
+        <Icon name="delete" size={24} color='#F72585' />
+      </TouchableOpacity>
+    </TouchableOpacity>
+  );
+
   return (
-    <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1499346030926-9a72daac6c63' }} style={styles.background}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Your Favorites</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Search a City"
-          value={city}
-          onChangeText={setCity}
-        />
-        <Button title="Add" onPress={addFavorite} color="#FFD700" />
+    <View style={globalStyles.container}>
+      <View style={[globalStyles.card, { marginTop: 20 }]}>
+        <Text style={globalStyles.title}>Add Favorite City</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <TextInput
+            style={[globalStyles.input, { flex: 1, marginRight: 8 }]}
+            placeholder="Enter city name"
+            value={city}
+            onChangeText={setCity}
+          />
+          <TouchableOpacity
+            style={[globalStyles.button, { paddingHorizontal: 16 }]}
+            onPress={addFavorite}
+            disabled={loading}
+          >
+            <Icon name="add" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {loading && favorites.length === 0 ? (
+        <ActivityIndicator size="large" color='#4361EE' style={{ marginTop: 20 }} />
+      ) : (
         <FlatList
           data={favorites}
           keyExtractor={item => item}
-          renderItem={({ item }) => (
-            <View style={styles.favItem}>
-              <Text
-                style={styles.favText}
-                onPress={() => navigation.navigate('WeatherDetailScreen', { weather: weatherData[item] })}
-              >
-                {item}: {weatherData[item] ? Math.round(weatherData[item].main.temp) : 'Loading'}°C
-              </Text>
-              <Button title="Remove" onPress={() => removeFavorite(item)} color="#FF4500" />
-            </View>
-          )}
+          renderItem={renderFavoriteItem}
+          contentContainerStyle={{ padding: 8 }}
+          ListEmptyComponent={
+            <Text style={{ textAlign: 'center', marginTop: 20, color: '#212529' }}>
+              No favorite cities yet. Add some!
+            </Text>
+          }
         />
-      </View>
-    </ImageBackground>
+      )}
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  background: { flex: 1 },
-  container: { padding: 20, backgroundColor: 'rgba(0,0,0,0.6)', flex: 1, margin: 20, borderRadius: 15 },
-  title: { fontSize: 28, color: '#FFD700', textAlign: 'center', marginBottom: 20, fontWeight: 'bold' },
-  input: { backgroundColor: '#FFF', padding: 12, marginVertical: 10, borderRadius: 8 },
-  favItem: { flexDirection: 'row', justifyContent: 'space-between', padding: 15, backgroundColor: '#1E90FF', marginVertical: 5, borderRadius: 8 },
-  favText: { color: '#FFF', fontSize: 18, fontWeight: 'bold' },
-});
 
 export default FavoritesScreen;

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../Config';
+import { auth,db } from '../config/Config';
 import { doc, getDoc } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { styles as globalStyles, headerOptions } from '../global/Theme';
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -11,6 +12,13 @@ const LoginScreen = ({ navigation }) => {
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        navigation.setOptions({
+            ...headerOptions,
+            title: 'Login',
+        });
+    }, [navigation]);
 
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -69,11 +77,12 @@ const LoginScreen = ({ navigation }) => {
     };
 
     return (
-        <ImageBackground source={require('../assets/default.png')} style={styles.background}>
-            <View style={styles.container}>
-                <Text style={styles.title}>Welcome Back</Text>
+        <View style={globalStyles.container}>
+            <View style={[globalStyles.card, { marginTop: 20 }]}>
+                <Text style={globalStyles.title}>Welcome Back</Text>
+                
                 <TextInput
-                    style={styles.input}
+                    style={globalStyles.input}
                     placeholder="Email"
                     value={email}
                     onChangeText={(text) => {
@@ -83,9 +92,10 @@ const LoginScreen = ({ navigation }) => {
                     keyboardType="email-address"
                     autoCapitalize="none"
                 />
-                {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+                {emailError ? <Text style={globalStyles.errorText}>{emailError}</Text> : null}
+                
                 <TextInput
-                    style={styles.input}
+                    style={globalStyles.input}
                     placeholder="Password"
                     value={password}
                     onChangeText={(text) => {
@@ -94,65 +104,34 @@ const LoginScreen = ({ navigation }) => {
                     }}
                     secureTextEntry
                 />
-                {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
-                <TouchableOpacity                    
-                    style={styles.buttonStyle}
-                    onPress={handleLogin} 
+                {passwordError ? <Text style={globalStyles.errorText}>{passwordError}</Text> : null}
+
+                <TouchableOpacity
+                    style={globalStyles.button}
+                    onPress={handleLogin}
+                    disabled={loading}
                 >
-                    <Text style={styles.buttonText}>{loading ? "Signing In..." : "Login"}</Text>
+                    {loading ? (
+                        <ActivityIndicator color="white" />
+                    ) : (
+                        <Text style={globalStyles.buttonText}>Login</Text>
+                    )}
                 </TouchableOpacity>
-                <Text style={styles.link} onPress={() => navigation.navigate('SignupScreen')}>
-                    New here? Sign Up
-                </Text>
+
+                <TouchableOpacity 
+                    style={{ marginTop: 16 }}
+                    onPress={() => navigation.navigate('SignupScreen')}
+                >
+                    <Text style={{ 
+                        color: '#4361EE', 
+                        textAlign: 'center' 
+                    }}>
+                        New here? <Text style={{ fontWeight: 'bold' }}>Sign Up</Text>
+                    </Text>
+                </TouchableOpacity>
             </View>
-        </ImageBackground>
+        </View>
     );
 };
-
-const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        justifyContent: 'center'
-    },
-    container: {
-        padding: 20,
-        backgroundColor: 'rgba(0,0,0,0.8)',
-        borderRadius: 15,
-        margin: 20
-    },
-    title: {
-        fontSize: 34, color: '#FFF', 
-        textAlign: 'center', 
-        marginBottom: 20, 
-        fontWeight: 'bold'
-    },
-    input: {
-        backgroundColor: '#FFF', 
-        padding: 12, 
-        marginVertical: 10, 
-        borderRadius: 10
-    },
-    error: {
-        color: '#FF4500', fontSize: 14, marginBottom: 10
-    },
-    buttonStyle: {
-        backgroundColor: '#FFD700',
-        padding: 15,
-        borderRadius: 8,
-        marginVertical: 15,
-        alignItems: 'center'
-    },
-    buttonText: {
-        color: '#000',
-        fontWeight: 'bold',
-        fontSize: 16
-    },    
-    link: {
-        color: '#2BD9FE', 
-        textAlign: 'center', 
-        marginTop: 15, 
-        fontSize: 16
-    },
-});
 
 export default LoginScreen;
