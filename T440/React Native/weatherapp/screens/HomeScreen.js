@@ -4,7 +4,7 @@ import * as Location from 'expo-location';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Home = ({ navigation }) => {
+const HomeScreen = ({ navigation }) => {
     const [weather, setWeather] = useState(null);
     const [city, setCity] = useState('');
     const [showInput, setShowInput] = useState(false);
@@ -132,4 +132,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Home;
+export default HomeScreen;

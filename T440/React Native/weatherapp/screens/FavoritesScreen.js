@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../Config';
 import axios from 'axios';
 
-const Favorites = ({ navigation }) => {
+const FavoritesScreen = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);
   const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState({});
@@ -96,7 +96,7 @@ const Favorites = ({ navigation }) => {
             <View style={styles.favItem}>
               <Text
                 style={styles.favText}
-                onPress={() => navigation.navigate('WeatherDetails', { weather: weatherData[item] })}
+                onPress={() => navigation.navigate('WeatherDetailScreen', { weather: weatherData[item] })}
               >
                 {item}: {weatherData[item] ? Math.round(weatherData[item].main.temp) : 'Loading'}°C
               </Text>
@@ -118,4 +118,4 @@ const styles = StyleSheet.create({
   favText: { color: '#FFF', fontSize: 18, fontWeight: 'bold' },
 });
 
-export default Favorites;
+export default FavoritesScreen;

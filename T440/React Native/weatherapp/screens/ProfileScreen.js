@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  Button, 
-  StyleSheet, 
-  ImageBackground, 
-  ActivityIndicator, 
-  TouchableOpacity 
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  ImageBackground,
+  ActivityIndicator,
+  TouchableOpacity
 } from 'react-native';
 import { signOut } from 'firebase/auth';
 import { auth } from '../Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Profile = ({ navigation }) => {
+const ProfileScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -55,8 +55,8 @@ const Profile = ({ navigation }) => {
 
   if (loading) {
     return (
-      <ImageBackground 
-        source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }} 
+      <ImageBackground
+        source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }}
         style={styles.background}
       >
         <View style={styles.container}>
@@ -67,32 +67,32 @@ const Profile = ({ navigation }) => {
   }
 
   return (
-    <ImageBackground 
-      source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }} 
+    <ImageBackground
+      source={{ uri: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' }}
       style={styles.background}
     >
       <View style={styles.container}>
         <Text style={styles.title}>Your Profile</Text>
-        
+
         <View style={styles.profileInfo}>
           <Text style={styles.label}>Name:</Text>
           <Text style={styles.info}>{userData?.name || 'Guest'}</Text>
-          
+
           <Text style={styles.label}>Email:</Text>
           <Text style={styles.info}>{userData?.email}</Text>
         </View>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.editButton}
           onPress={() => navigation.navigate('EditProfile', { userData })}
         >
           <Text style={styles.editButtonText}>Edit Profile</Text>
         </TouchableOpacity>
-        
-        <Button 
-          title="Logout" 
-          onPress={handleLogout} 
-          color="#FF4500" 
+
+        <Button
+          title="Logout"
+          onPress={handleLogout}
+          color="#FF4500"
         />
       </View>
     </ImageBackground>
@@ -100,22 +100,22 @@ const Profile = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  background: { 
-    flex: 1, 
-    justifyContent: 'center' 
+  background: {
+    flex: 1,
+    justifyContent: 'center'
   },
-  container: { 
-    padding: 20, 
-    backgroundColor: 'rgba(0,0,0,0.6)', 
-    borderRadius: 15, 
-    margin: 20 
+  container: {
+    padding: 20,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    borderRadius: 15,
+    margin: 20
   },
-  title: { 
-    fontSize: 28, 
-    color: '#FFD700', 
-    textAlign: 'center', 
-    marginBottom: 20, 
-    fontWeight: 'bold' 
+  title: {
+    fontSize: 28,
+    color: '#FFD700',
+    textAlign: 'center',
+    marginBottom: 20,
+    fontWeight: 'bold'
   },
   profileInfo: {
     marginBottom: 20,
@@ -144,4 +144,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Profile;
+export default ProfileScreen;

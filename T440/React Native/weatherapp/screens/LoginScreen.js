@@ -5,7 +5,7 @@ import { auth, db } from '../Config';
 import { doc, getDoc } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Login = ({ navigation }) => {
+const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -101,7 +101,7 @@ const Login = ({ navigation }) => {
                 >
                     <Text style={styles.buttonText}>{loading ? "Signing In..." : "Login"}</Text>
                 </TouchableOpacity>
-                <Text style={styles.link} onPress={() => navigation.navigate('Signup')}>
+                <Text style={styles.link} onPress={() => navigation.navigate('SignupScreen')}>
                     New here? Sign Up
                 </Text>
             </View>
@@ -155,4 +155,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Login;
+export default LoginScreen;

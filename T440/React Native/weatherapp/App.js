@@ -5,13 +5,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, Text, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from './Config';
-import Login from './screens/Login';
-import Signup from './screens/Signup';
-import Home from './screens/Home';
-import Favorites from './screens/Favorites';
-import Profile from './screens/Profile';
-import EditProfile from './screens/EditProfile';
-import WeatherDetail from './screens/WeatherDetail';
+import LoginScreen from './screens/LoginScreen';
+import SignupScreen from './screens/SignupScreen';
+import HomeScreen from './screens/HomeScreen';
+import FavoritesScreen from './screens/FavoritesScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
+import WeatherDetailScreen from './screens/WeatherDetailScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const NativeStack = createNativeStackNavigator();
@@ -22,11 +22,11 @@ const HomeTabs = () => (
     screenOptions={({ route }) => ({
       tabBarIcon: ({ color, size }) => {
         let iconName;
-        if (route.name === 'HomeTab') {
+        if (route.name === 'HomeScreen') {
           iconName = 'home';
-        } else if (route.name === 'Favorites') {
+        } else if (route.name === 'FavoritesScreen') {
           iconName = 'favorite';
-        } else if (route.name === 'Profile') {
+        } else if (route.name === 'ProfileScreen') {
           iconName = 'person';
         }
         return <MaterialIcons name={iconName} size={size} color={color} />;
@@ -42,18 +42,18 @@ const HomeTabs = () => (
     })}
   >
     <Tab.Screen
-      name="HomeTab"
-      component={Home}
+      name="HomeScreen"
+      component={HomeScreen}
       options={{ headerShown: false }}
     />
     <Tab.Screen
-      name="Favorites"
-      component={Favorites}
+      name="FavoritesScreen"
+      component={FavoritesScreen}
       options={{ headerShown: false }}
     />
     <Tab.Screen
-      name="Profile"
-      component={Profile}
+      name="ProfileScreen"
+      component={ProfileScreen}
       options={{ headerShown: false }}
     />
   </Tab.Navigator>
@@ -63,13 +63,17 @@ const MainStack = () => (
   <NativeStack.Navigator>
     <NativeStack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
     <NativeStack.Screen
-      name="WeatherDetails"
-      component={WeatherDetail}
-      options={{ headerStyle: { backgroundColor: '#1E90FF' }, headerTintColor: '#FFF' }}
+      name="WeatherDetailScreen"
+      component={WeatherDetailScreen}
+      options={{ 
+        headerStyle: { backgroundColor: '#1E90FF' }, 
+        headerTintColor: '#FFF',
+        title: 'Weather Detail'
+       }}
     />
     <NativeStack.Screen
-      name="EditProfile"
-      component={EditProfile}
+      name="EditProfileScreen"
+      component={EditProfileScreen}
       options={{ 
         headerStyle: { backgroundColor: '#1E90FF' }, 
         headerTintColor: '#FFF',
@@ -81,8 +85,8 @@ const MainStack = () => (
 
 const AuthStack = () => (
   <NativeStack.Navigator>
-    <NativeStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-    <NativeStack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
+    <NativeStack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
+    <NativeStack.Screen name="SignupScreen" component={SignupScreen} options={{ headerShown: false }} />
   </NativeStack.Navigator>
 );
 

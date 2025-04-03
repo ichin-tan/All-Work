@@ -5,7 +5,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Signup = ({ navigation }) => {
+const SignupScreen = ({ navigation }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -76,7 +76,7 @@ const Signup = ({ navigation }) => {
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                
+
                 const userData = {
                     uid: user.uid,
                     name: name,
@@ -86,7 +86,7 @@ const Signup = ({ navigation }) => {
 
                 await setDoc(doc(db, 'users', user.uid), userData);
                 await AsyncStorage.setItem('user', JSON.stringify(userData));
-                
+
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'Home' }],
@@ -103,7 +103,7 @@ const Signup = ({ navigation }) => {
         <ImageBackground source={require('../assets/default.png')} style={styles.background}>
             <View style={styles.container}>
                 <Text style={styles.title}>Get Started</Text>
-                
+
                 <TextInput
                     style={styles.input}
                     placeholder="Full Name"
@@ -114,7 +114,7 @@ const Signup = ({ navigation }) => {
                     }}
                 />
                 {nameError ? <Text style={styles.error}>{nameError}</Text> : null}
-                
+
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
@@ -127,7 +127,7 @@ const Signup = ({ navigation }) => {
                     autoCapitalize="none"
                 />
                 {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
-                
+
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
@@ -139,7 +139,7 @@ const Signup = ({ navigation }) => {
                     secureTextEntry
                 />
                 {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
-                
+
                 <TextInput
                     style={styles.input}
                     placeholder="Confirm Password"
@@ -151,15 +151,15 @@ const Signup = ({ navigation }) => {
                     secureTextEntry
                 />
                 {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
-                
-                <TouchableOpacity                    
+
+                <TouchableOpacity
                     style={styles.buttonStyle}
-                    onPress={handleSignup} 
+                    onPress={handleSignup}
                 >
                     <Text style={styles.buttonText}>{loading ? "Creating Account..." : "Sign Up"}</Text>
                 </TouchableOpacity>
 
-                <Text style={styles.link} onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.link} onPress={() => navigation.navigate('LoginScreen')}>
                     Already have an account? Login
                 </Text>
             </View>
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
         color: '#000',
         fontWeight: 'bold',
         fontSize: 16
-    },    
+    },
 });
 
-export default Signup;
+export default SignupScreen;

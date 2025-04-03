@@ -1,36 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
 
-const WeatherDetail = ({ route }) => {
+const WeatherDetailScreen = ({ route }) => {
     const { weather } = route.params;
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const getBackgroundImage = (weather) => {
         if (!weather || !weather.weather || !weather.weather[0]) {
-          return require('../assets/default.png');
+            return require('../assets/default.png');
         }
-      
+
         const condition = weather.weather[0].main.toLowerCase();
         const currentTime = weather.dt;
         const sunrise = weather.sys.sunrise;
         const sunset = weather.sys.sunset;
-      
+
         const isDay = currentTime >= sunrise && currentTime < sunset;
-      
+
         if (condition.includes('rain')) {
-          return isDay
-            ? require('../assets/rain-day.png')
-            : require('../assets/rain-night.png');
+            return isDay
+                ? require('../assets/rain-day.png')
+                : require('../assets/rain-night.png');
         } else if (condition.includes('cloud')) {
-          return isDay
-            ? require('../assets/cloud-day.png')
-            : require('../assets/cloud-night.png');
+            return isDay
+                ? require('../assets/cloud-day.png')
+                : require('../assets/cloud-night.png');
         } else {
-          return isDay
-            ? require('../assets/sun.png')
-            : require('../assets/moon.png');
+            return isDay
+                ? require('../assets/sun.png')
+                : require('../assets/moon.png');
         }
-      };
+    };
     const backgroundImage = getBackgroundImage(weather);
 
     return (
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default WeatherDetail;
+export default WeatherDetailScreen;

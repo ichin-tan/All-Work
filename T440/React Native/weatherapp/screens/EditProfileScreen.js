@@ -4,7 +4,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const EditProfile = ({ navigation, route }) => {
+const EditProfileScreen = ({ navigation, route }) => {
     const { userData } = route.params;
     const [name, setName] = useState(userData?.name || '');
     const [loading, setLoading] = useState(false);
@@ -163,4 +163,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default EditProfile;
+export default EditProfileScreen;
