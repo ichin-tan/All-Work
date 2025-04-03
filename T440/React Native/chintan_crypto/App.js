@@ -20,7 +20,7 @@ const App = () => {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-          headerBackTitleVisible: false, // This removes the back button title
+          headerBackTitleVisible: false,
         }}
       >
         <Stack.Screen
@@ -29,10 +29,10 @@ const App = () => {
           options={({ navigation }) => ({
             title: 'Crypto Exchanges',
             headerRight: () => (
-              <MaterialIcons 
-                name="favorite" 
-                size={24} 
-                color="#FFFFFF" 
+              <MaterialIcons
+                name="favorite"
+                size={24}
+                color="#FFFFFF"
                 style={{ marginRight: 0 }}
                 onPress={() => navigation.navigate('Favorites')}
               />
@@ -43,7 +43,7 @@ const App = () => {
           name="CryptoDetail"
           component={CryptoDetailScreen}
           options={({ route }) => ({
-            title: route.params.cryptoId,
+            title: "Crypto Details",
           })}
         />
         <Stack.Screen

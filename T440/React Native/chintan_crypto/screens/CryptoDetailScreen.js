@@ -24,19 +24,6 @@ const CryptoDetailScreen = ({ route, navigation }) => {
         };
 
         fetchCryptoDetails();
-    }, [cryptoId]);
-
-    const handleAddFavorite = async () => {
-        try {
-            const addedFavorite = await addFavorite(crypto);
-            Alert.alert('Success', `${crypto.name} added to favorites!`);
-        } catch (error) {
-            console.error('Error adding favorite:', error);
-            Alert.alert('Error', 'Failed to add to favorites');
-        }
-    };
-
-    useEffect(() => {
         navigation.setOptions({
             headerLeft: () => (
                 <MaterialIcons 
@@ -48,7 +35,18 @@ const CryptoDetailScreen = ({ route, navigation }) => {
                 />
             ),
         });
-    }, [navigation]);
+
+    }, []);
+
+    const handleAddFavorite = async () => {
+        try {
+            const addedFavorite = await addFavorite(crypto);
+            Alert.alert('Success', `${addedFavorite.name} added to favorites!`);
+        } catch (error) {
+            console.error('Error adding favorite:', error);
+            Alert.alert('Error', 'Failed to add to favorites');
+        }
+    };
 
     if (loading || !crypto) {
         return <Loader />;

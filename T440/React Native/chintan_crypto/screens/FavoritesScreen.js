@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet, Text, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import FavCard from '../components/FavCard';
 import { getFavorites, clearFavorites, removeFavorite } from '../firebase/FirebaseHelper';
@@ -70,10 +69,7 @@ const FavoritesScreen = ({ navigation }) => {
             ),
 
         });
-
-        const unsubscribe = navigation.addListener('focus', fetchFavorites);
-        return unsubscribe;
-    }, [navigation, favorites.length]);
+    }, [favorites.length]);
 
     const handleRemoveFavorite = async (crypto) => {
         try {

@@ -1,6 +1,5 @@
 import { db } from '../config/Config';
 import { collection, addDoc, getDocs, deleteDoc, doc, writeBatch } from 'firebase/firestore';
-import { Alert } from 'react-native';
 
 const FAVORITE_COLLECTION = collection(db, 'favorites');
 
