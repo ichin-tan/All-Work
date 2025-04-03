@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
-import * as Location from 'expo-location';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { WeatherApi, getWeatherIcon } from '../helper/WeatherHelper';
 import { styles as globalStyles, headerOptions } from '../global/Theme';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -11,7 +9,6 @@ const HomeScreen = ({ navigation }) => {
     const [city, setCity] = useState('');
     const [showInput, setShowInput] = useState(false);
     const [loading, setLoading] = useState(true);
-    const API_KEY = '7be661621bd1b79439fc2c635d4a6391';
 
     useEffect(() => {
         navigation.setOptions({
@@ -19,65 +16,46 @@ const HomeScreen = ({ navigation }) => {
             title: 'Weather',
         });
         
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status === 'granted') {
-                let location = await Location.getCurrentPositionAsync({});
-                await fetchWeatherByCoords(location.coords.latitude, location.coords.longitude);
-            } else {
-                await checkPreference();
-            }
-        })();
+        loadWeatherData();
     }, [navigation]);
 
-    const checkPreference = async () => {
-        const preferredCity = await AsyncStorage.getItem('preferredCity');
-        if (preferredCity) {
-            await fetchWeatherByCity(preferredCity);
-        } else {
-            setShowInput(true);
-        }
-        setLoading(false);
-    };
-
-    const fetchWeatherByCoords = async (lat, lon) => {
+    const loadWeatherData = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(
-                `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
-            );
-            setWeather(res.data);
+            const weatherData = await WeatherApi.getCurrentLocationWeather();
+            if (!weatherData) {
+                const preferredWeather = await WeatherApi.getPreferredCityWeather();
+                if (!preferredWeather) {
+                    setShowInput(true);
+                } else {
+                    setWeather(preferredWeather);
+                }
+            } else {
+                setWeather(weatherData);
+            }
         } catch (error) {
-            console.error('Error fetching weather:', error);
-            alert('Error getting weather data');
+            console.error('Error loading weather data:', error);
+            setShowInput(true);
         } finally {
             setLoading(false);
         }
     };
 
-    const fetchWeatherByCity = async (cityName) => {
+    const handleCitySubmit = async () => {
+        if(city === "") {
+            alert("Please enter city")
+            return
+        }
         try {
             setLoading(true);
-            const res = await axios.get(
-                `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric`
-            );
-            setWeather(res.data);
-            await AsyncStorage.setItem('preferredCity', cityName);
+            const weatherData = await WeatherApi.getWeatherByCity(city);
+            setWeather(weatherData);
             setShowInput(false);
-        } catch (e) {
+        } catch (error) {
             alert('Invalid city. Try again.');
         } finally {
             setLoading(false);
         }
-    };
-
-    const getWeatherIcon = (condition) => {
-        if (!condition) return 'weather-sunny';
-        condition = condition.toLowerCase();
-        if (condition.includes('rain')) return 'opacity';
-        if (condition.includes('cloud')) return 'cloud';
-        if (condition.includes('sun')) return 'sunny';
-        return 'sunny';
     };
 
     return (
@@ -101,7 +79,7 @@ const HomeScreen = ({ navigation }) => {
                     />
                     <TouchableOpacity
                         style={globalStyles.button}
-                        onPress={() => fetchWeatherByCity(city)}
+                        onPress={handleCitySubmit}
                     >
                         <Text style={globalStyles.buttonText}>Set Location</Text>
                     </TouchableOpacity>
