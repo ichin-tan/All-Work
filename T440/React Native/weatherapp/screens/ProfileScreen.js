@@ -52,7 +52,7 @@ const ProfileScreen = ({ navigation }) => {
       alert('Logout failed. Please try again.');
     }
   };
-  
+
   if (loading) {
     return (
       <View style={[globalStyles.container, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -64,16 +64,9 @@ const ProfileScreen = ({ navigation }) => {
   return (
     <View style={globalStyles.container}>
       <View style={[globalStyles.card, { marginTop: 20 }]}>
-        <View style={{ 
-          flexDirection: 'row', 
-          alignItems: 'center', 
-          marginBottom: 20 
-        }}>
-          <Icon name="account-circle" size={60} color='#4361EE' />
-          <Text style={[globalStyles.title, { marginLeft: 16 }]}>
-            {userData?.name || 'Guest'}
-          </Text>
-        </View>
+        <Text style={[globalStyles.title, { marginLeft: 0 }]}>
+          {userData?.name || 'NA'}
+        </Text>
 
         <View style={{ marginBottom: 20 }}>
           <View style={{ 
