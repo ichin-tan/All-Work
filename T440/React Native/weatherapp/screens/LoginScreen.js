@@ -65,7 +65,7 @@ const LoginScreen = ({ navigation }) => {
                     
                     navigation.reset({
                         index: 0,
-                        routes: [{ name: 'Home' }],
+                        routes: [{ name: 'HomeTabs' }],
                     });
                 }
             } catch (error) {

@@ -5,6 +5,7 @@ import { auth } from '../config/Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles as globalStyles, headerOptions } from '../global/Theme';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { CommonActions } from '@react-navigation/native';
 
 const ProfileScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
@@ -40,16 +41,18 @@ const ProfileScreen = ({ navigation }) => {
     try {
       await signOut(auth);
       await AsyncStorage.removeItem('user');
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'LoginScreen' }],
-      });
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        })
+      );
     } catch (error) {
       console.log('Logout error:', error);
       alert('Logout failed. Please try again.');
     }
   };
-
+  
   if (loading) {
     return (
       <View style={[globalStyles.container, { justifyContent: 'center', alignItems: 'center' }]}>
