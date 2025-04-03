@@ -22,9 +22,12 @@ const HomeTabs = () => (
     screenOptions={({ route }) => ({
       tabBarIcon: ({ color, size }) => {
         let iconName;
-        if (route.name === 'Home') iconName = 'home';
-        else if (route.name === 'Favorites') iconName = 'favorite';
-        else if (route.name === 'Profile') iconName = 'person';
+        if (route.name === 'Home') 
+          iconName = 'home';
+        else if (route.name === 'Favorites') 
+          iconName = 'favorite';
+        else if (route.name === 'Profile') 
+          iconName = 'person';
         return <Icon name={iconName} size={size} color={color} />;
       },
       ...tabBarOptions,
@@ -40,10 +43,10 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
+    const observer = auth.onAuthStateChanged(user => {
       setIsLoggedIn(!!user);
     });
-    return unsubscribe;
+    return observer;
   }, []);
 
   if (isLoggedIn === null) {
