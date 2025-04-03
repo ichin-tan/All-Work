@@ -48,7 +48,7 @@ const FavoritesScreen = ({ navigation }) => {
           alert(`Error fetching weather for ${city}:`)
         }
       }
-  
+      console.log(weatherMap);
       setWeatherData(weatherMap);
     } catch (error) {
       alert('Error fetching weather');

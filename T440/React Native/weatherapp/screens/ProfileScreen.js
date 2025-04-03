@@ -15,9 +15,9 @@ const ProfileScreen = ({ navigation }) => {
       title: 'Profile',
     });
     
-    const unsubscribe = navigation.addListener('focus', fetchUserData);
+    const observer = navigation.addListener('focus', fetchUserData);
     fetchUserData();
-    return unsubscribe;
+    return observer;
   }, [navigation]);
 
   const fetchUserData = async () => {
